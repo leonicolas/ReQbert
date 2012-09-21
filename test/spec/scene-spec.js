@@ -8,7 +8,7 @@ describe('Scene', function() {
 
   describe('When a new Scene is created', function() {
     it('should not be null', function() {
-
+      expect(scene).not.toBe(null);
     });
   });
 });
