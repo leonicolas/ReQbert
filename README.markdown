@@ -10,8 +10,9 @@ Introduction
 ReQbert is a browser-based remake of the MSX version of the game Q*bert.
 
 It’s an open source, non-profit project, initiated by three brazilian guys — 
-Luciano Sother, Leonardo Nicolas and Gabriel Moreira — as a way to exercise 
-their skills in HTML5 and Javascript during their scarce spare-time.
+Luciano Sother, Leonardo Nicolas, Felipe Cypriano and Gabriel Moreira — as a
+way to exercise their skills in HTML5 and Javascript during their scarce
+spare-time.
 
 This game was chosen because Sother and Nicolas, in their childhood, were fans 
 of MSX games, specially those published by Konami. So, we’ve searched for 
@@ -32,6 +33,8 @@ Be welcome and have fun!
 
 3. Requisites
 -------------
+
+A modern browser like Chrome, Firefox, Opera or Safari.
 
 4. How to play
 --------------
