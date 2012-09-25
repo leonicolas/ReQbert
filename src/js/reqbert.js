@@ -2,40 +2,32 @@
   var Reqbert;
 
   Reqbert = function (containerId) {
-    var me = this;
-    
-    me._scene = new Scene(containerId);
-    me._state = Reqbert.GameState.stoped;
-    
-    me._init = function() {
-      debug.log('Reqbert init!', me);
-    };
+    this.state = Reqbert.GameState.STOPPED;
+    return this;
+  }
 
-    me.start = function() {
-      debug.log('Starting Reqbert!');
-      me._state = Reqbert.GameState.running;
-    };
+  Reqbert.prototype.start = function() {
+    debug.log('Starting Reqbert!');
+    this.state = Reqbert.GameState.RUNNING;
+    return this;
+  };
 
-    me.isStoped = function() {
-      return me._state === Reqbert.GameState.stoped;
-    };
+  Reqbert.prototype.isStoped = function() {
+    return this.state === Reqbert.GameState.STOPPED;
+  };
 
-    me.isRunning = function() {
-      return me._state === Reqbert.GameState.running;
-    };
+  Reqbert.prototype.isRunning = function() {
+    return this.state === Reqbert.GameState.RUNNING;
+  };
 
-    me.isPaused = function() {
-      return me._state === Reqbert.GameState.paused;
-    };
-
-    me._init();
-    return me;
+  Reqbert.prototype.isPaused = function() {
+    return this.state === Reqbert.GameState.PAUSED;
   };
 
   Reqbert.GameState = {
-    stoped: 0,
-    running: 1,
-    paused: 2
+    STOPPED: 'stopped',
+    RUNNING: 'running',
+    PAUSED: 'paused'
   };
 
   if(!window.Reqbert)

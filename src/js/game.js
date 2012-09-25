@@ -1,107 +1,44 @@
 (function() {
   var doc = document;
-  var Scene, Debug;
+  
+  var Debug = function() {
+    this.customConsole = null;
+    this.init();
+  }
 
-  Scene = function (containerId) {
-    var me = this;
-
-    me.config = new Scene.Config(containerId);
-
-    me.init = function() {
-    };
-
-    me.init();
-    return me;
+  Debug.prototype.init = function() {
+    if(!console || !console.log)
+      this.createCustomConsole();
   };
 
-  Scene.Config = function(containerId) {
-    var me = this;
+  Debug.prototype.createCustomConsole = function () {
+    this.customConsole = document.createElement('div');
+    this.customConsole.setAttribute('id', 'custom-console');
+    document.body.appendChild(this.customConsole);
+  }
 
-    /** MSX default resolution **/
-    me.width = 256;
-    me.height = 192;
-    me.container = null;
-    me.useRAF = false;
-
-    me.init = function() {
-      me.initContainer();
-      me.initRAF();
-      me.initSize();
-      debug.log('Scene init!', me);
-    };
-
-    me.initRAF = function() {
-      me.useRAF = window.requestAnimationFrame || 
-                  window.webkitRequestAnimationFrame || 
-                  window.mozRequestAnimationFrame || 
-                  window.oRequestAnimationFrame || 
-                  window.msRequestAnimationFrame;
-    };
-
-    me.initContainer = function() {
-      if(containerId)
-        me.container = doc.getElementById(containerId);
-      if(!me.container)
-        throw "Invalid container id";
-    };
-
-    me.initSize = function() {
-      var w = me.container.offsetWidth;
-      var h = me.container.offsetHeight;
-      if(w)
-        me.width = w;
-      if(h)
-        me.height = h;
-    };
-
-    me.init();
-    return me;
+  Debug.prototype.log = function() {
+    if(!arguments.size === 0)
+      return;
+    if(this.customConsole)
+      this.logOnCustomConsole.apply(this, arguments);
+    else
+      console.log(arguments);
+    return this;
   };
 
-  Debug = function() {
-    var me = this;
-    
-    me.customConsole = null;
+  Debug.prototype.logOnCustomConsole = function(args) {
+    // TODO Add new types
+    if(args instanceof Array)
+      for(var arg in args)
+        this.appendMessage(arg);
+    else
+        this.appendMessage(args);
+  }
 
-    me.init = function() {
-      if(!console || !console.log)
-        me.createCustomConsole();
-    };
-
-    me.createCustomConsole = function () {
-      me.customConsole = document.createElement('div');
-      me.customConsole.setAttribute('id', 'custom-console');
-      document.body.appendChild(me.customConsole);
-    }
-
-    me.log = function() {
-      if(!arguments.size === 0)
-        return;
-      if(me.customConsole)
-        me.logOnCustomConsole.apply(this, arguments);
-      else
-        console.log(arguments);
-    };
-
-    me.logOnCustomConsole = function(args) {
-        // TODO Add new types
-        if(args instanceof Array)
-          for(var arg in args)
-            me.appendMessage(arg);
-        else
-            me.appendMessage(args);
-    }
-
-    me.appendMessage = function(msg) {
-      me.customConsole.innerHTML += msg + '<br/>';
-    };
-
-    me.init();
-    return me;
+  Debug.prototype.appendMessage = function(msg) {
+    this.customConsole.innerHTML += msg + '<br/>';
   };
-
-  if(!window.Scene)
-    window.Scene = Scene;
 
   if(!window.Debug)
     window.debug = new Debug();
