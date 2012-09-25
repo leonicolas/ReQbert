@@ -2,7 +2,7 @@ describe('Scene', function() {
   var scene;
   beforeEach(function() {
     var containerId = 'game-container';
-    var container = createGameContainer(containerId);
+    createGameContainer(containerId);
     scene = new Scene(containerId);
   });
 
