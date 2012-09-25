@@ -12,7 +12,7 @@
     return this;
   };
 
-  Reqbert.prototype.isStoped = function() {
+  Reqbert.prototype.isStopped = function() {
     return this.state === Reqbert.GameState.STOPPED;
   };
 

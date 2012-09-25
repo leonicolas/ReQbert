@@ -12,8 +12,8 @@ describe('Reqbert', function() {
       expect(reqbert).not.toBeNull();
     });
 
-    it('it should be in stoped state', function() {
-      expect(reqbert.isStoped()).toBeTruthy();
+    it('it should be in stopped state', function() {
+      expect(reqbert.isStopped()).toBeTruthy();
     });
 
     it('it should not be in running state', function() {
@@ -34,8 +34,8 @@ describe('Reqbert', function() {
       expect(reqbert.isRunning()).toBeTruthy();
     });
 
-    it('it should not be in stoped state', function() {
-      expect(reqbert.isStoped()).toBeFalsy();
+    it('it should not be in stopped state', function() {
+      expect(reqbert.isStopped()).toBeFalsy();
     });
 
     it('it should not be in paused state', function() {
