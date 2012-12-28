@@ -1,45 +1,25 @@
+var Game = Game || {};
+var Debug;
+
 (function() {
-  var doc = document;
-  
-  var Debug = function() {
-    this.customConsole = null;
-    this.init();
-  }
+  /* FRAME TIMER */
+  Game.FrameTimer = function() {
+    this.frameDurationTime = new Date().getTime();
+  };
+  Game.FrameTimer.prototype.constructor = Game.FrameTimer;
 
-  Debug.prototype.init = function() {
-    if(!console || !console.log)
-      this.createCustomConsole();
+  Game.FrameTimer.prototype.getFrameDurationTimeInSeconds = function getFrameDurationTimeInSeconds() {
+    var seconds = this.frameDurationTime / 1000;
+    return isNaN(seconds) ? 0 : seconds;
+  };
+ 
+  Game.FrameTimer.prototype.tick = function tick() {
+    var currentTickTime = new Date().getTime();
+    this.frameDurationTime = currentTickTime - this.lastTickTime;
+    this.lastTickTime = currentTickTime;
   };
 
-  Debug.prototype.createCustomConsole = function () {
-    this.customConsole = document.createElement('div');
-    this.customConsole.setAttribute('id', 'custom-console');
-    document.body.appendChild(this.customConsole);
-  }
-
-  Debug.prototype.log = function() {
-    if(!arguments.size === 0)
-      return;
-    if(this.customConsole)
-      this.logOnCustomConsole.apply(this, arguments);
-    else
-      console.log(arguments);
-    return this;
+  Game.FrameTimer.prototype.getFPS = function getFPS() {
+    return 1000 / this.frameDurationTime;
   };
-
-  Debug.prototype.logOnCustomConsole = function(args) {
-    // TODO Add new types
-    if(args instanceof Array)
-      for(var arg in args)
-        this.appendMessage(arg);
-    else
-        this.appendMessage(args);
-  }
-
-  Debug.prototype.appendMessage = function(msg) {
-    this.customConsole.innerHTML += msg + '<br/>';
-  };
-
-  if(!window.Debug)
-    window.debug = new Debug();
 })();
