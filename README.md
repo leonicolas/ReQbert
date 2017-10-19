@@ -1,8 +1,7 @@
 ReQbert - A HTML 5 MSX Q*bert game remake
 =========================================
 
-A project by Leonardo Nicolas, Luciano Sother, Gabriel Moreira and 
-Felipe Cypriano
+A project by Leonardo Nicolas in memory of Luciano Sother
 
 Introduction
 ------------
