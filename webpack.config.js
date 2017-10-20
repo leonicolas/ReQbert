@@ -5,7 +5,6 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
   devtool: 'inline-source-map',
 
-  watch: true,
   watchOptions: {
     ignored: /node_modules/
   },
@@ -15,6 +14,10 @@ module.exports = {
   output: {
     path: path.resolve('dist'),
     filename: './assets/js/main.js'
+  },
+
+  devServer: {
+    contentBase: './dist'
   },
 
   module: {
