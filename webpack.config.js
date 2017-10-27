@@ -37,6 +37,6 @@ module.exports = {
       inject: true,
       template: 'index.html'
     }),
-    new CopyWebpackPlugin([{ from: imgPath, to: imgPath }])
+    new CopyWebpackPlugin([{ from: assetsPath, to: assetsPath }])
   ]
 };
