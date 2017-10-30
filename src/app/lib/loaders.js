@@ -1,12 +1,16 @@
-export function loadImage(url) {
+export function loadImage(imageFile) {
   return new Promise(resolve => {
     const image = new Image();
     image.addEventListener('load', () => resolve(image));
-    image.src = url;
+    image.src = `/assets/img/${imageFile}`;
   });
 }
 
 export function loadLevel(levelNumber) {
   let level = `00${levelNumber}`.slice(-3);
-  return fetch(`/assets/levels/level-${level}.json`).then(resp => resp.json());
+  return loadJson(`level-${level}.json`);
+}
+
+export function loadJson(fileName) {
+  return fetch(`/assets/spec/${fileName}`).then(resp => resp.json());
 }
