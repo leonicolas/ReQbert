@@ -6,6 +6,7 @@ import SpriteMap from './lib/SpriteMap';
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 
+const gridSize = config.gridSize;
 context.fillRect(0, 0, config.screen.width, config.screen.height);
 
 loadImage('/assets/img/tiles.png').then(image => {
