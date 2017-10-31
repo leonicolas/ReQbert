@@ -46,7 +46,6 @@ export default class SpriteMap {
     if (rotation) {
       context.translate(transX, transY);
       context.rotate(degToRad(rotation));
-      //context.translate(-transX, -transY);
     }
     context.drawImage(this.image, x, y, width, height, 0, 0, width, height);
     return buffer;
