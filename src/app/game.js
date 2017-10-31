@@ -1,4 +1,4 @@
-import Background from './lib/Background';
+import BackgroundMap from './lib/BackgroundMap';
 import { loadImage, loadLevel, loadJson } from './lib/loaders';
 import config from './config.js';
 
@@ -16,6 +16,6 @@ Promise.all([loadImage('tiles.png'), loadJson('backgrounds.json')]).then(([tiles
   sprites.defineRotated('greenTriangle', 32, 0, gridSize * 2, gridSize);
   sprites.defineRotated('redTriangle', 64, 0, gridSize * 2, gridSize);
 
-  let bg = new Background(bgSpec.backgrounds, sprites);
-  bg.draw('bg-game-1', context);
+  let bgMap = new BackgroundMap(bgSpec.backgrounds, sprites);
+  bgMap.draw('bg-game-1', context);
 });

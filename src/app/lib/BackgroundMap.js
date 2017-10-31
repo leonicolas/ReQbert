@@ -1,11 +1,11 @@
 import config from '../config.js';
 import { castArray } from './utils';
 
-export default class Background {
+export default class BackgroundMap {
   constructor(bgSpec, sprites) {
     this.width = config.screen.width;
     this.height = config.screen.height;
-    this.bgLayers = new Map();
+    this.backgrounds = new Map();
 
     bgSpec.forEach(bg => {
       const buffer = document.createElement('canvas');
@@ -27,21 +27,33 @@ export default class Background {
       bg.fill.forEach(this.drawToBuffer(context, sprites));
 
       // Index background buffer
-      this.bgLayers.set(bg.name, buffer);
+      this.backgrounds.set(bg.name, buffer);
     });
   }
 
   drawToBuffer(context, sprites) {
+    function getRangeEdges(range) {
+      let isArray = Array.isArray(range);
+      return {
+        start: isArray ? range[0] : range,
+        end: isArray ? range[1] : range
+      };
+    }
+
     return fillSpec => {
       let nameIndex = 0;
       let names = castArray(fillSpec.spriteName);
+      // Process ranges
       fillSpec.ranges.forEach(range => {
         const stepX = range.stepX || 1;
         const stepY = range.stepY || 1;
+        // Process X range
         range.x.forEach(xRange => {
-          const xEdges = this.getRangeEdges(xRange);
+          const xEdges = getRangeEdges(xRange);
+          // Process Y range
           range.y.forEach(yRange => {
-            const yEdges = this.getRangeEdges(yRange);
+            const yEdges = getRangeEdges(yRange);
+            // Draw tile in X,Y coordinate
             for (let x = xEdges.start; x <= xEdges.end; x += stepX) {
               for (let y = yEdges.start; y <= yEdges.end; y += stepY) {
                 let spriteName = names[nameIndex++ % names.length];
@@ -54,16 +66,8 @@ export default class Background {
     };
   }
 
-  getRangeEdges(range) {
-    let isArray = Array.isArray(range);
-    return {
-      start: isArray ? range[0] : range,
-      end: isArray ? range[1] : range
-    };
-  }
-
-  draw(bgLayerName, context) {
-    const bgLayer = this.bgLayers.get(bgLayerName);
-    context.drawImage(bgLayer, 0, 0);
+  draw(bgName, context) {
+    const bg = this.backgrounds.get(bgName);
+    context.drawImage(bg, 0, 0);
   }
 }
