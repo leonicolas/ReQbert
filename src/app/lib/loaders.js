@@ -8,9 +8,10 @@ export function loadImage(imageFile) {
 
 export function loadLevel(levelNumber) {
   let level = `00${levelNumber}`.slice(-3);
-  return loadJson(`level-${level}.json`);
+  return loadJson(`level-${level}`);
 }
 
 export function loadJson(fileName) {
-  return fetch(`/assets/spec/${fileName}`).then(resp => resp.json());
+  return fetch(`/assets/spec/${fileName}.json`).then(resp => resp.json());
+}
 }

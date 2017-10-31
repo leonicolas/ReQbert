@@ -9,7 +9,7 @@ const context = canvas.getContext('2d');
 
 const gridSize = config.gridSize;
 
-Promise.all([loadImage('tiles.png'), loadJson('backgrounds.json')]).then(([tiles, bgSpec]) => {
+Promise.all([loadImage('tiles.png'), loadJson('backgrounds')]).then(([tiles, bgSpec]) => {
   const sprites = new SpriteMap(tiles, gridSize);
   sprites.define('brick', 0, 16, gridSize, gridSize);
   sprites.defineRotated('blueTriangle', 0, 0, gridSize * 2, gridSize);
