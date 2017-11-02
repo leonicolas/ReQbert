@@ -7,7 +7,7 @@ export default class BackgroundMap {
     this.height = config.screen.height;
     this.backgrounds = new Map();
 
-    bgSpec.forEach(bg => {
+    bgSpec.backgrounds.forEach(bg => {
       const buffer = document.createElement('canvas');
 
       // Buffer size

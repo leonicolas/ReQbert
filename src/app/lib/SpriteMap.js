@@ -1,26 +1,50 @@
 import { degToRad } from './math';
 import { castArray } from './utils';
+import config from '../config';
 
 export default class SpriteMap {
-  constructor(image, tilesSize) {
+  constructor(spritesSpec, image) {
     this.image = image;
-    this.tilesSize = tilesSize;
     this.sprites = new Map();
+
+    spritesSpec.sprites.forEach(spriteSpec => {
+      this.defineSprite(spriteSpec);
+    });
   }
 
-  define(name, x, y, width, height) {
+  defineSprite(spriteSpec) {
+    const params = {
+      name: spriteSpec.name,
+      x: spriteSpec.position[0],
+      y: spriteSpec.position[1],
+      width: spriteSpec.size[0] * config.gridSize,
+      height: spriteSpec.size[1] * config.gridSize
+    };
+    switch (spriteSpec.definition) {
+      case 'rotated':
+        this.defineRotated(params);
+        break;
+      case 'fliped':
+        this.defineFliped(params);
+        break;
+      default:
+        this.define(params);
+    }
+  }
+
+  define({ name, x, y, width, height }) {
     const buffer = this.createBuffer(name, x, y, width, height);
     this.set(name, width, height, buffer);
   }
 
-  defineRotated(name, x, y, width, height) {
+  defineRotated({ name, x, y, width, height }) {
     const buffers = [0, 90, 180, 270].map(rotation =>
       this.createBuffer(name, x, y, width, height, { rotation })
     );
     this.set(name, width, height, buffers);
   }
 
-  defineFliped(name, x, y, width, height) {
+  defineFliped({ name, x, y, width, height }) {
     const buffers = [false, true].map(fliped =>
       this.createBuffer(name, x, y, width, height, { fliped })
     );
@@ -53,8 +77,10 @@ export default class SpriteMap {
 
   set(name, width, height, buffers) {
     this.sprites.set(name, {
-      xSize: width / this.tilesSize,
-      ySize: height / this.tilesSize,
+      size: {
+        x: width / config.gridSize,
+        y: height / config.gridSize
+      },
       width,
       height,
       buffers: castArray(buffers)
@@ -75,6 +101,6 @@ export default class SpriteMap {
 
   draw(name, context, x = 0, y = 0, index = 0) {
     const sprite = this.get(name);
-    context.drawImage(sprite.buffers[index], x * this.tilesSize, y * this.tilesSize);
+    context.drawImage(sprite.buffers[index], x * config.gridSize, y * config.gridSize);
   }
 }

@@ -1,0 +1,28 @@
+{
+  "imageFile": "tiles.png",
+  "sprites": [
+    {
+      "name": "brick",
+      "position": [0, 16],
+      "size": [1, 1]
+    },
+    {
+      "name": "blueTriangle",
+      "position": [0, 0],
+      "size": [2, 1],
+      "definition": "rotated"
+    },
+    {
+      "name": "greenTriangle",
+      "position": [32, 0],
+      "size": [2, 1],
+      "definition": "rotated"
+    },
+    {
+      "name": "redTriangle",
+      "position": [64, 0],
+      "size": [2, 1],
+      "definition": "rotated"
+    }
+  ]
+}
