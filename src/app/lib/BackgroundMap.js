@@ -4,11 +4,15 @@ import Vec2 from './Vec2';
 import Range from './Range';
 
 export default class BackgroundMap {
-  constructor(bgSpec, sprites) {
+  constructor(backgroundsSpec, sprites) {
     this.size = new Vec2(config.screen.width, config.screen.height);
     this.backgrounds = new Map();
 
-    bgSpec.backgrounds.forEach(bg => {
+    backgroundsSpec.backgrounds.forEach(this._createBackground(sprites));
+  }
+
+  _createBackground(sprites) {
+    return bgSpec => {
       const buffer = document.createElement('canvas');
 
       // Buffer size
@@ -17,19 +21,23 @@ export default class BackgroundMap {
 
       // Fill buffer with defined color
       const context = buffer.getContext('2d');
-      if (bg.color) {
-        context.fillStyle = bg.color;
-        context.fillRect(0, 0, this.size.x, this.size.y);
-      } else {
-        context.fillStyle = 'rgba(0, 0, 0, 1)';
-      }
+      this._fillBuffer(context, bgSpec.color);
 
       // Draw sprites into buffer
-      bg.fill.forEach(this._drawToBuffer(context, sprites));
+      bgSpec.fill.forEach(this._drawToBuffer(context, sprites));
 
       // Index background buffer
-      this.backgrounds.set(bg.name, buffer);
-    });
+      this.backgrounds.set(bgSpec.name, buffer);
+    };
+  }
+
+  _fillBuffer(context, color) {
+    if (color) {
+      context.fillStyle = color;
+      context.fillRect(0, 0, this.size.x, this.size.y);
+    } else {
+      context.fillStyle = 'rgba(0, 0, 0, 1)';
+    }
   }
 
   _drawToBuffer(context, sprites) {
