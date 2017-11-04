@@ -74,8 +74,10 @@ export default class BackgroundMap {
     };
   }
 
-  draw(bgName, context) {
+  get(bgName) {
     const bg = this.backgrounds.get(bgName);
-    context.drawImage(bg, 0, 0);
+    return context => {
+      context.drawImage(bg, 0, 0);
+    };
   }
 }
