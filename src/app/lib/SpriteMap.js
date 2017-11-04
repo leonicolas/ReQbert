@@ -1,3 +1,4 @@
+import Vect2 from './Vec2';
 import { degToRad } from './math';
 import { castArray } from './utils';
 import config from '../config';
@@ -8,81 +9,89 @@ export default class SpriteMap {
     this.sprites = new Map();
 
     spritesSpec.sprites.forEach(spriteSpec => {
-      this.defineSprite(spriteSpec);
+      this._defineSprite(spriteSpec);
     });
   }
 
-  defineSprite(spriteSpec) {
+  _defineSprite(spriteSpec) {
     const params = {
       name: spriteSpec.name,
-      x: spriteSpec.position[0],
-      y: spriteSpec.position[1],
-      width: spriteSpec.size[0] * config.gridSize,
-      height: spriteSpec.size[1] * config.gridSize
+      pos: new Vect2(spriteSpec.position[0], spriteSpec.position[1]),
+      size: new Vect2(
+        spriteSpec.size[0] * config.gridSize,
+        spriteSpec.size[1] * config.gridSize
+      )
     };
     switch (spriteSpec.definition) {
       case 'rotated':
-        this.defineRotated(params);
+        this._defineRotated(params);
         break;
       case 'fliped':
-        this.defineFliped(params);
+        this._defineFliped(params);
         break;
       default:
-        this.define(params);
+        this._define(params);
     }
   }
 
-  define({ name, x, y, width, height }) {
-    const buffer = this.createBuffer(name, x, y, width, height);
-    this.set(name, width, height, buffer);
+  _define({ name, pos, size }) {
+    const buffer = this._createBuffer(name, pos, size);
+    this._set(name, size, buffer);
   }
 
-  defineRotated({ name, x, y, width, height }) {
+  _defineRotated({ name, pos, size }) {
     const buffers = [0, 90, 180, 270].map(rotation =>
-      this.createBuffer(name, x, y, width, height, { rotation })
+      this._createBuffer(name, pos, size, { rotation })
     );
-    this.set(name, width, height, buffers);
+    this._set(name, size, buffers);
   }
 
-  defineFliped({ name, x, y, width, height }) {
+  _defineFliped({ name, pos, size }) {
     const buffers = [false, true].map(fliped =>
-      this.createBuffer(name, x, y, width, height, { fliped })
+      this._createBuffer(name, pos, size, { fliped })
     );
-    this.set(name, width, height, buffers);
+    this._set(name, size, buffers);
   }
 
-  createBuffer(name, x, y, width, height, { rotation, fliped } = {}) {
+  _createBuffer(name, pos, size, { rotation, fliped } = {}) {
     const buffer = document.createElement('canvas');
-    const flipWidthHeight = rotation === 90 || rotation === 270;
-    const spriteWidth = flipWidthHeight ? height : width;
-    const spriteHeight = flipWidthHeight ? width : height;
-    buffer.width = spriteWidth;
-    buffer.height = spriteHeight;
+    const isRotated = rotation === 90 || rotation === 270;
+    const spriteSize = size.clone();
+    if (isRotated) spriteSize.swap();
+    buffer.width = spriteSize.x;
+    buffer.height = spriteSize.y;
 
     const context = buffer.getContext('2d');
     if (fliped) {
       context.scale(-1, 1);
-      context.translate(-spriteWidth, 0);
+      context.translate(-spriteSize.x, 0);
     }
 
-    let transX = flipWidthHeight && rotation === 270 ? 0 : spriteWidth;
-    let transY = flipWidthHeight && rotation === 90 ? 0 : spriteHeight;
     if (rotation) {
+      let transX = isRotated && rotation === 270 ? 0 : spriteSize.x;
+      let transY = isRotated && rotation === 90 ? 0 : spriteSize.y;
       context.translate(transX, transY);
       context.rotate(degToRad(rotation));
     }
-    context.drawImage(this.image, x, y, width, height, 0, 0, width, height);
+    context.drawImage(
+      this.image,
+      pos.x,
+      pos.y,
+      size.x,
+      size.y,
+      0,
+      0,
+      size.x,
+      size.y
+    );
     return buffer;
   }
 
-  set(name, width, height, buffers) {
+  _set(name, size, buffers) {
+    const width = size.x / config.gridSize;
+    const height = size.y / config.gridSize;
     this.sprites.set(name, {
-      size: {
-        x: width / config.gridSize,
-        y: height / config.gridSize
-      },
-      width,
-      height,
+      size: new Vect2(width, height),
       buffers: castArray(buffers)
     });
   }
@@ -93,14 +102,15 @@ export default class SpriteMap {
 
   getSpriteSize(name) {
     const sprite = this.get(name);
-    return {
-      x: sprite.xSize,
-      y: sprite.ySize
-    };
+    return sprite.size;
   }
 
-  draw(name, context, x = 0, y = 0, index = 0) {
+  draw(name, context, pos, index = 0) {
     const sprite = this.get(name);
-    context.drawImage(sprite.buffers[index], x * config.gridSize, y * config.gridSize);
+    context.drawImage(
+      sprite.buffers[index],
+      pos.x * config.gridSize,
+      pos.y * config.gridSize
+    );
   }
 }
