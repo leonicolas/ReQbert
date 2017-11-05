@@ -1,4 +1,12 @@
 {
+  "animations": [
+    {
+      "name": "level-cleared",
+      "frameTime": 0.15,
+      "frames": ["bg-game-1", "bg-game-2", "bg-game-3"]
+    }
+  ],
+
   "spritesSpecName": "tiles.json",
   "backgrounds": [
     {
@@ -145,7 +153,7 @@
           ]
         },
         {
-          "spriteName": ["greenTriangle", "blueTriangle", "redTriangle"],
+          "spriteName": ["redTriangle", "greenTriangle", "blueTriangle"],
           "index": 2,
           "ranges": [
             {
@@ -156,7 +164,7 @@
           ]
         },
         {
-          "spriteName": ["blueTriangle", "greenTriangle", "redTriangle"],
+          "spriteName": ["redTriangle", "blueTriangle", "greenTriangle"],
           "index": 0,
           "ranges": [
             {
@@ -167,7 +175,7 @@
           ]
         },
         {
-          "spriteName": ["redTriangle", "blueTriangle", "greenTriangle"],
+          "spriteName": ["greenTriangle", "redTriangle", "blueTriangle"],
           "index": 1,
           "ranges": [
             {
@@ -178,7 +186,7 @@
           ]
         },
         {
-          "spriteName": ["redTriangle", "blueTriangle", "greenTriangle"],
+          "spriteName": ["greenTriangle", "redTriangle", "blueTriangle"],
           "index": 3,
           "ranges": [
             {
