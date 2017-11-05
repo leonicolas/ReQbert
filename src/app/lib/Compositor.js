@@ -7,7 +7,7 @@ export default class Compositor {
     this.layers.push(layer);
   }
 
-  draw(context) {
-    this.layers.forEach(layer => layer(context));
+  draw(context, time) {
+    this.layers.forEach(layer => layer(context, time));
   }
 }

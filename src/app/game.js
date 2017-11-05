@@ -8,11 +8,12 @@ async function main(canvas) {
   const bgMap = await loadBackgrounds('backgrounds.json');
 
   const compositor = new Compositor();
-  compositor.addLayer(bgMap.get('bg-game-1'));
+  //compositor.addLayer(bgMap.get('bg-game-3'));
+  compositor.addLayer(bgMap.getAnimation('level-cleared'));
 
   const timer = new Timer();
   timer.update = time => {
-    compositor.draw(context);
+    compositor.draw(context, time);
   };
   timer.start();
 }

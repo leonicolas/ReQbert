@@ -1,5 +1,6 @@
 import config from '../config.js';
 import { castArray } from './utils';
+import { createAnimation } from './animation';
 import Vec2 from './Vec2';
 import Range from './Range';
 
@@ -7,8 +8,18 @@ export default class BackgroundMap {
   constructor(backgroundsSpec, sprites) {
     this.size = new Vec2(config.screen.width, config.screen.height);
     this.backgrounds = new Map();
+    this.animations = new Map();
 
     backgroundsSpec.backgrounds.forEach(this._createBackground(sprites));
+    backgroundsSpec.animations.forEach(this._createAnimation.bind(this));
+  }
+
+  _createAnimation(animSpec) {
+    const backgrounds = this.backgrounds;
+    animSpec.backgrounds = animSpec.frames.map(bgName =>
+      backgrounds.get(bgName)
+    );
+    this.animations.set(animSpec.name, animSpec);
   }
 
   _createBackground(sprites) {
@@ -85,7 +96,21 @@ export default class BackgroundMap {
   get(bgName) {
     const bg = this.backgrounds.get(bgName);
     return context => {
-      context.drawImage(bg, 0, 0);
+      this._draw(context, bg);
     };
+  }
+
+  getAnimation(animationName) {
+    const animSpec = this.animations.get(animationName);
+    const bgAnim = createAnimation(animSpec.backgrounds, animSpec.frameTime);
+    let elapsedTime = 0;
+    return (context, time) => {
+      this._draw(context, bgAnim(elapsedTime));
+      elapsedTime += time;
+    };
+  }
+
+  _draw(context, frame) {
+    context.drawImage(frame, 0, 0);
   }
 }
