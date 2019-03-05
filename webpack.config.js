@@ -10,6 +10,12 @@ const imgPath = path.join(assetsPath, 'img');
 module.exports = {
   devtool: 'inline-source-map',
 
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: false,
+    port: 9000
+  },
+
   watchOptions: {
     ignored: /node_modules/
   },
@@ -22,17 +28,24 @@ module.exports = {
   },
 
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
       }
     ]
   },
 
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    new CleanWebpackPlugin({
+      dry: true,
+      verbose: true,
+      cleanOnceBeforeBuildPatterns: ['dist']
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       template: 'index.html'
