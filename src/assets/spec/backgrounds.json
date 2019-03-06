@@ -7,7 +7,6 @@
     }
   ],
 
-  "spritesSpecName": "tiles.json",
   "backgrounds": [
     {
       "name": "bg-game-1",

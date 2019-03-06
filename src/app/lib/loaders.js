@@ -1,5 +1,6 @@
 import BackgroundMap from './BackgroundMap';
 import SpriteMap from './SpriteMap';
+import Level from './Level';
 
 export function loadImage(imageFile) {
   return new Promise(resolve => {
@@ -15,15 +16,15 @@ export function loadSprites(spritesSpecName) {
     .then(([spritesSpec, image]) => new SpriteMap(spritesSpec, image));
 }
 
-export function loadBackgrounds(bgSpecName) {
+export function loadBackgrounds(bgSpecName, spriteMap) {
   return loadJson(bgSpecName)
-    .then(bgSpec => Promise.all([bgSpec, loadSprites(bgSpec.spritesSpecName)]))
-    .then(([bgSpec, spritesMap]) => new BackgroundMap(bgSpec, spritesMap));
+    .then(bgSpec => new BackgroundMap(bgSpec, spriteMap));
 }
 
-export function loadLevel(levelNumber) {
+export function loadLevel(levelNumber, spriteMap) {
   let level = `00${levelNumber}`.slice(-3);
-  return loadJson(`level-${level}.json`);
+  return loadJson(`level-${level}.json`)
+    .then(levelSpec => new Level(levelSpec, spriteMap));
 }
 
 export function loadJson(fileName) {

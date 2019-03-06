@@ -5,12 +5,12 @@ import Vec2 from './Vec2';
 import Range from './Range';
 
 export default class BackgroundMap {
-  constructor(backgroundsSpec, sprites) {
+  constructor(backgroundsSpec, spriteMap) {
     this.size = new Vec2(config.screen.width, config.screen.height);
     this.backgrounds = new Map();
     this.animations = new Map();
 
-    backgroundsSpec.backgrounds.forEach(this._createBackground(sprites));
+    backgroundsSpec.backgrounds.forEach(this._createBackground(spriteMap));
     backgroundsSpec.animations.forEach(this._createAnimation.bind(this));
   }
 
@@ -22,7 +22,7 @@ export default class BackgroundMap {
     this.animations.set(animSpec.name, animSpec);
   }
 
-  _createBackground(sprites) {
+  _createBackground(spriteMap) {
     return bgSpec => {
       const buffer = document.createElement('canvas');
 
@@ -34,8 +34,8 @@ export default class BackgroundMap {
       const context = buffer.getContext('2d');
       this._fillBuffer(context, bgSpec.color);
 
-      // Draw sprites into buffer
-      bgSpec.fill.forEach(this._drawToBuffer(context, sprites));
+      // Draw spriteMap into the buffer
+      bgSpec.fill.forEach(this._drawToBuffer(context, spriteMap));
 
       // Index background buffer
       this.backgrounds.set(bgSpec.name, buffer);
@@ -51,7 +51,7 @@ export default class BackgroundMap {
     }
   }
 
-  _drawToBuffer(context, sprites) {
+  _drawToBuffer(context, spriteMap) {
     function normalizeRange(fn) {
       return range => {
         range = Array.isArray(range) ? range : [range, range];
@@ -63,7 +63,7 @@ export default class BackgroundMap {
       rangeX.forEach(x => {
         rangeY.forEach(y => {
           let spriteName = names[nameIndex++ % names.length];
-          sprites.draw(spriteName, context, new Vec2(x, y), index || 0);
+          spriteMap.draw(spriteName, context, new Vec2(x, y), index || 0);
         }, step.y);
       }, step.x);
     }
