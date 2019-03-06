@@ -3,8 +3,7 @@ ReQbert - A HTML 5 MSX Q*bert game remake
 
 A project by Leonardo Nicolas in memory of Luciano Sother.
 
-Introduction
-------------
+## Introduction
 
 ReQbert is a browser-based remake of the MSX version of the game Q*bert.
 
@@ -24,8 +23,7 @@ allowing interested people to read and give us feedback.
 
 Be welcome and have fun!
 
-1. How it works
----------------
+## 1. How it works
 
 This game is being developed in pure HTML 5 and Javascript with 2D Canvas rendering.
 I'm using [Webpack](https://webpack.js.org/) to create the game bundles and [Babel](https://babeljs.io/)
@@ -34,26 +32,21 @@ to transpile the new Javascript syntax to the syntax known by the browser.
 All game sprites are saved in PNG files and they were drawn using [Gimp](https://www.gimp.org/).
 The game specifications like levels, sprites map and backgrounds are saved in JSON files.
 
-2. Installation
----------------
+## 2. Installation
 
 * Clone the project.
 * Run the command `npm run start:dev`.
 
-3. Requisites
--------------
+## 3. Requisites
 
 * A modern browser like Chrome, Firefox, Opera or Safari.
 * NodeJS version 10 or greater.
 
-4. How to play
---------------
+## 4. How to play
 
-5. Acknowledgements
--------------------
+## 5. Acknowledgements
 
-6. Legal
---------
+## 6. Legal
 
 Released under the GPLv3 license.
 For full details see the LICENSE file included in this distribution.
