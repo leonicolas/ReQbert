@@ -25,42 +25,42 @@
       "definition": "rotated"
     },
     {
-      "name": "block1-right",
+      "name": "bl1-r",
       "position": [0, 32],
       "size": [3, 3]
     },
     {
-      "name": "block1-front",
+      "name": "bl1-f",
       "position": [48, 32],
       "size": [3, 3]
     },
     {
-      "name": "block1-top",
+      "name": "bl1-t",
       "position": [96, 32],
       "size": [3, 3]
     },
     {
-      "name": "block1-bottom-z",
+      "name": "bl1-b-z",
       "position": [144, 32],
       "size": [3, 3]
     },
     {
-      "name": "block1-front-z",
+      "name": "bl1-f-z",
       "position": [192, 32],
       "size": [3, 3]
     },
     {
-      "name": "block1-front-x",
+      "name": "bl1-f-x",
       "position": [240, 32],
       "size": [3, 3]
     },
     {
-      "name": "block1-top-x",
+      "name": "bl1-t-x",
       "position": [288, 32],
       "size": [3, 3]
     },
     {
-      "name": "block1-bottom-x",
+      "name": "bl1-b-x",
       "position": [336, 32],
       "size": [3, 3]
     }
