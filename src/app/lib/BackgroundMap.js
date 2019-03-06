@@ -95,19 +95,19 @@ export default class BackgroundMap {
 
   get(bgName) {
     const bg = this.backgrounds.get(bgName);
-    return context => {
+    return { render: (context) => {
       this._draw(context, bg);
-    };
+    }};
   }
 
   getAnimation(animationName) {
     const animSpec = this.animations.get(animationName);
     const bgAnim = createAnimation(animSpec.backgrounds, animSpec.frameTime);
     let elapsedTime = 0;
-    return (context, time) => {
+    return { render: (context, time) => {
       this._draw(context, bgAnim(elapsedTime));
       elapsedTime += time;
-    };
+    }};
   }
 
   _draw(context, frame) {

@@ -87,6 +87,10 @@ export default class SpriteMap {
     return buffer;
   }
 
+  _get(name) {
+    return this.sprites.get(name);
+  }
+
   _set(name, size, buffers) {
     const width = size.x / config.gridSize;
     const height = size.y / config.gridSize;
@@ -96,21 +100,28 @@ export default class SpriteMap {
     });
   }
 
-  get(name) {
-    return this.sprites.get(name);
-  }
-
-  getSpriteSize(name) {
-    const sprite = this.get(name);
-    return sprite.size;
-  }
-
-  draw(name, context, pos, index = 0) {
-    const sprite = this.get(name);
+  _draw(sprite, context, pos = { x: 0, y: 0}, index = 0) {
     context.drawImage(
       sprite.buffers[index],
       pos.x * config.gridSize,
       pos.y * config.gridSize
     );
+  }
+
+  get(name) {
+    const sprite = this._get(name);
+    return { render: context => {
+      this._draw(sprite, context);
+    }};
+  }
+
+  getSpriteSize(name) {
+    const sprite = this._get(name);
+    return sprite.size;
+  }
+
+  draw(name, context, pos, index = 0) {
+    const sprite = this._get(name);
+    this._draw(sprite, context, pos, index);
   }
 }
