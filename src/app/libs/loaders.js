@@ -1,32 +1,31 @@
 import BackgroundMap from './BackgroundMap';
 import SpriteMap from './SpriteMap';
-import Level from './Level';
+import Stage from './Stage';
 
 export function loadImage(imageFile) {
   return new Promise(resolve => {
     const image = new Image();
     image.addEventListener('load', () => resolve(image));
-    image.src = `/assets/img/${imageFile}`;
+    image.src = `/assets/imgs/${imageFile}`;
   });
 }
 
 export function loadSprites(spritesSpecName) {
-  return loadJson(spritesSpecName)
+  return loadJson(`specs/${spritesSpecName}`)
     .then(spritesSpec => Promise.all([spritesSpec, loadImage(spritesSpec.imageFile)]))
     .then(([spritesSpec, image]) => new SpriteMap(spritesSpec, image));
 }
 
 export function loadBackgrounds(bgSpecName, spriteMap) {
-  return loadJson(bgSpecName)
+  return loadJson(`specs/${bgSpecName}`)
     .then(bgSpec => new BackgroundMap(bgSpec, spriteMap));
 }
 
-export function loadLevel(levelNumber, spriteMap) {
-  let level = `00${levelNumber}`.slice(-3);
-  return loadJson(`level-${level}.json`)
-    .then(levelSpec => new Level(levelSpec, spriteMap));
+export function loadStage(stageNumber, spriteMap) {
+  return loadJson(`stages/stage-${stageNumber}.json`)
+    .then(stageSpec => new Stage(stageSpec, spriteMap));
 }
 
 export function loadJson(fileName) {
-  return fetch(`/assets/spec/${fileName}`).then(resp => resp.json());
+  return fetch(`/assets/${fileName}`).then(resp => resp.json());
 }
