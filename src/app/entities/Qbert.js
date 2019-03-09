@@ -1,15 +1,17 @@
 import Vec2 from '../libs/Vec2';
 
 export default class Qbert {
-  constructor(spriteMap) {
+
+  constructor(spriteMap, pos) {
     this.spriteMap = spriteMap;
     this.qbert = this.spriteMap.get('qbert');
+    this.pos = pos;
   }
 
   update(time) {
   }
 
   render(context, time) {
-    this.qbert.render(context, 0, new Vec2(15.5, 1.6));
+    this.qbert.render(context, 0, this.pos);
   }
 }
