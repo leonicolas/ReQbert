@@ -1,0 +1,10 @@
+{
+  "imageFile": "characters.png",
+  "sprites": [
+    {
+      "name": "qbert",
+      "position": [0, 0],
+      "size": [2, 2]
+    }
+  ]
+}

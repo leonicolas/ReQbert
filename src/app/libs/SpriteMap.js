@@ -110,9 +110,11 @@ export default class SpriteMap {
 
   get(name) {
     const sprite = this._get(name);
-    return { render: context => {
-      this._draw(sprite, context);
-    }};
+    return {
+      render: (context, time, pos) => {
+        this._draw(sprite, context, pos);
+      }
+    };
   }
 
   getSpriteSize(name) {
