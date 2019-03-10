@@ -16,4 +16,9 @@ export default class Vec2 {
     this.x = x;
     this.y = y;
   }
+
+  add(x, y) {
+    this.x += x;
+    this.y += y;
+  }
 }

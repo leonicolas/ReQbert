@@ -5,6 +5,7 @@ import Compositor from './libs/Compositor';
 import Qbert from './entities/Qbert'
 import Vec2 from './libs/Vec2';
 import config from './config';
+import { degToRad } from './libs/math';
 
 async function main(canvas) {
   const context = canvas.getContext('2d');
@@ -33,7 +34,41 @@ async function main(canvas) {
 
   // Time based main loop
   const timer = new Timer();
+
+  let angle = 0;
+  let mult = 1;
+  let jumping = false;
+  let deltaTime = 0;
+
   timer.update = time => {
+    let radAngle = degToRad(180 + angle);
+    let x = 3 * Math.sin(radAngle);
+    let y = 2 + 2 * Math.cos(radAngle);
+    qbert.pos.set(15 + x, 1 + y);
+
+    if(jumping) {
+      angle += 3.8 * mult;
+      if(angle > 90 || angle < 0) {
+        mult = -mult;
+        jumping = false;
+        deltaTime = 0;
+        qbert.setNormalState();
+      }
+    }
+
+    if(!jumping) {
+      deltaTime += time;
+      if(deltaTime >= 1) {
+        jumping = true;
+        qbert.setJumpingState();
+        if(mult > 0) {
+          qbert.setLeftFront();
+        } else {
+          qbert.setRightBack();
+        }
+      }
+    }
+
     compositor.update(time);
     compositor.render(context, time);
   };

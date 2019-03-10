@@ -111,8 +111,8 @@ export default class SpriteMap {
   get(name) {
     const sprite = this._get(name);
     return {
-      render: (context, time, pos) => {
-        this._draw(sprite, context, pos);
+      render: (context, time, pos, index) => {
+        this._draw(sprite, context, pos, index);
       }
     };
   }
