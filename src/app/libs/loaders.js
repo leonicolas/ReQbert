@@ -6,7 +6,7 @@ export function loadImage(imageFile) {
   return new Promise(resolve => {
     const image = new Image();
     image.addEventListener('load', () => resolve(image));
-    image.src = `/assets/imgs/${imageFile}`;
+    image.src = `assets/imgs/${imageFile}`;
   });
 }
 
@@ -27,5 +27,5 @@ export function loadStage(stageNumber, spriteMap) {
 }
 
 export function loadJson(fileName) {
-  return fetch(`/assets/${fileName}`).then(resp => resp.json());
+  return fetch(`assets/${fileName}`).then(resp => resp.json());
 }
