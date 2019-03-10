@@ -1,0 +1,29 @@
+{
+  "imageFile": "characters.png",
+  "sprites": [
+    {
+      "name": "qbert-front",
+      "position": [0, 0],
+      "size": [2, 2],
+      "definition": "fliped"
+    },
+    {
+      "name": "qbert-front-jumping",
+      "position": [32, 0],
+      "size": [2, 2],
+      "definition": "fliped"
+    },
+    {
+      "name": "qbert-back",
+      "position": [64, 0],
+      "size": [2, 2],
+      "definition": "fliped"
+    },
+    {
+      "name": "qbert-back-jumping",
+      "position": [96, 0],
+      "size": [2, 2],
+      "definition": "fliped"
+    }
+  ]
+}
