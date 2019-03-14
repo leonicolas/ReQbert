@@ -16,9 +16,13 @@ export default class Layer {
     this.sprites.push(sprite);
   }
 
-  render(context, time) {
+  update(deltaTime) {
+    this.sprites.forEach(sprite => sprite.update(deltaTime));
+  }
+
+  render(context, deltaTime) {
     this._clear();
-    this._renderSprites(time);
+    this._renderSprites(deltaTime);
     context.drawImage(this.buffer, this.pos.x * config.gridSize, this.pos.y * config.gridSize);
   }
 
@@ -26,9 +30,9 @@ export default class Layer {
     this.context.clearRect(0, 0, this.buffer.width, this.buffer.height);
   }
 
-  _renderSprites(time) {
+  _renderSprites(deltaTime) {
     this.sprites.forEach(sprite => {
-      sprite.render(this.context, time);
+      sprite.render(this.context, deltaTime);
     })
   }
 }

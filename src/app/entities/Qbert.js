@@ -1,53 +1,37 @@
 import Vec2 from '../libs/Vec2';
+import Entity from '../libs/Entity';
+import Jump from '../behaviors/Jump';
 
-export default class Qbert {
+const LEFT = 0;
+const RIGHT = 1;
+
+export default class Qbert extends Entity {
 
   constructor(spriteMap, pos) {
-    this.spriteMap = spriteMap;
+    super(spriteMap, pos);
+
     this.actions = {
-      normalFront: this.spriteMap.get('qbert-front'),
-      jumpingFront: this.spriteMap.get('qbert-front-jumping'),
-      normalBack: this.spriteMap.get('qbert-back'),
-      jumpingBack: this.spriteMap.get('qbert-back-jumping'),
+      'idle-front': this.spriteMap.get('qbert-front'),
+      'idle-back': this.spriteMap.get('qbert-back'),
+      'jumping-front': this.spriteMap.get('qbert-front-jumping'),
+      'jumping-back': this.spriteMap.get('qbert-back-jumping'),
     };
-    this.pos = pos;
-    this.setNormalState();
-    this.setLeftFront();
+
+    this.sprite = this.actions.idleFront;
+    this.xDirection = LEFT;
+
+    this.addBehaviour(new Jump());
   }
 
-  setJumpingState() {
-    this.state = 'jumping';
+  update(deltaTime) {
+    this.xDirection = this.jump.isToLeft() ? LEFT : RIGHT;
+    let state = this.jump.isJumping() ? 'jumping' : 'idle';
+    let yDirection = this.jump.isToDown() ? 'front' : 'back';
+    this.sprite = this.actions[`${state}-${yDirection}`];
+    super.update(deltaTime);
   }
 
-  setNormalState() {
-    this.state = 'normal';
-  }
-
-  setLeftFront() {
-    this.directionLeftRight = 0;
-    this.directionFrontBack = 'Front';
-  }
-
-  setRightFront() {
-    this.directionLeftRight = 1;
-    this.directionFrontBack = 'Front';
-  }
-
-  setLeftBack() {
-    this.directionLeftRight = 0;
-    this.directionFrontBack = 'Back';
-  }
-
-  setRightBack() {
-    this.directionLeftRight = 1;
-    this.directionFrontBack = 'Back';
-  }
-
-  update(time) {
-  }
-
-  render(context, time) {
-    let sprite = this.actions[this.state + this.directionFrontBack];
-    sprite.render(context, 0, this.pos, this.directionLeftRight);
+  render(context) {
+    this.sprite.render(context, 0, this.pos, this.xDirection);
   }
 }
