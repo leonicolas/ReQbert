@@ -5,7 +5,6 @@ import Compositor from './libs/Compositor';
 import Qbert from './entities/Qbert'
 import Vec2 from './libs/Vec2';
 import config from './config';
-import { degToRad } from './libs/math';
 
 async function main(canvas) {
   const context = canvas.getContext('2d');
@@ -36,15 +35,26 @@ async function main(canvas) {
   const timer = new Timer();
 
   // Test code... it will be deleted
-  setTimeout(() => qbert.jump.leftDown(), 1000);
-  setTimeout(() => qbert.jump.leftDown(), 2000);
-  setTimeout(() => qbert.jump.leftDown(), 3000);
-  setTimeout(() => qbert.jump.leftDown(), 4000);
+  let finish = true;
+  function jumpTest() {
+    if(!finish) return;
+    finish = false;
+    for(let time = 1; time <= 8; time++) {
+      if(time % 2) setTimeout(() => qbert.jump.leftDown(), time * 1000);
+      else setTimeout(() => qbert.jump.rightDown(), time * 1000);
+    }
+
+    for(let time = 9; time <= 16; time++) {
+      if(time % 2) setTimeout(() => qbert.jump.rightUp(), time * 1000);
+      else setTimeout(() => { qbert.jump.leftUp(); if(time === 16) finish = true; }, time * 1000);
+    }
+  }
 
   // Main loop
-  timer.update = time => {
-    compositor.update(time);
-    compositor.render(context, time);
+  timer.update = deltaTime => {
+    jumpTest();
+    compositor.update(deltaTime);
+    compositor.render(context, deltaTime);
   };
   timer.start();
 }

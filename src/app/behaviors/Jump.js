@@ -1,18 +1,20 @@
 import Behavior from '../libs/Behavior';
 import { degToRad } from '../libs/math'
 
-const LEFT = 1;
-const RIGHT = -1;
-const UP = 'up';
-const DOWN = 'down';
+const LEFT = -1;
+const RIGHT = 1;
+const UP = -1;
+const DOWN = 1;
 
 export default class Jump extends Behavior {
 
   constructor() {
     super('jump');
-    this.velocity = 200;
+    this.speed = 250;
     this.xDirection = LEFT;
     this.yDirection = DOWN;
+    this.ratioX = 3;
+    this.ratioY = 2;
   }
 
   leftDown() {
@@ -48,26 +50,42 @@ export default class Jump extends Behavior {
   }
 
   isJumping() {
-    return Math.abs(this.angle) < Math.abs(this.maxAngle);
+    return this.jumping;
   }
 
   _start(xDirection, yDirection) {
     if(this.isJumping()) return;
     this.xDirection = xDirection;
     this.yDirection = yDirection;
+    this.lastX = yDirection > 0 ? 0 : 1;
+    this.lastY = yDirection > 0 ? 1 : 0;
     this.angle = 0;
-    this.maxAngle = 90 * this.xDirection;
+    this.maxAngle = 90;
+    this.refAngle = yDirection > 0 ? 0 : 90;
+    this.jumping = true;
+  }
+
+  _calculateNextAngle(deltaTime) {
+    this.angle += this.speed * deltaTime;
+    if(this.angle > this.maxAngle) {
+      this.jumping = false;
+      this.angle = this.maxAngle;
+    }
   }
 
   update(entity, deltaTime) {
-    if(!this.isJumping())
-      return;
+    if(!this.isJumping()) return;
 
-    let radAngle = degToRad(90 + this.angle);
+    this._calculateNextAngle(deltaTime);
+    let radAngle = degToRad(this.refAngle - this.angle);
     let x = Math.sin(radAngle);
     let y = Math.cos(radAngle);
 
-    entity.pos.move(x, y);
-    this.angle += this.velocity * this.xDirection * deltaTime;
+    entity.pos.move(
+      Math.abs(x - this.lastX) * this.ratioX * this.xDirection,
+      Math.abs(y - this.lastY) * this.ratioY * this.yDirection
+    );
+    this.lastX = x;
+    this.lastY = y;
   }
 }
