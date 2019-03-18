@@ -1,4 +1,4 @@
-import Behavior from '../libs/Behavior';
+import Behavior from '../Behavior';
 import { degToRad } from '../libs/math'
 
 const LEFT = -1;

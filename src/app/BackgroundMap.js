@@ -1,16 +1,16 @@
-import config from '../config.js';
-import { castArray } from './utils';
-import { createAnimation } from './animation';
-import Vec2 from './Vec2';
+import config from './config.js';
+import { castArray } from './libs/utils';
+import { createAnimation } from './libs/animation';
+import { Vec2 } from './libs/math';
 import Range from './Range';
 
 export default class BackgroundMap {
-  constructor(backgroundsSpec, spriteMap) {
+  constructor(backgroundsSpec, tilesMap) {
     this.size = new Vec2(config.screen.width, config.screen.height);
     this.backgrounds = new Map();
     this.animations = new Map();
 
-    backgroundsSpec.backgrounds.forEach(this._createBackground(spriteMap));
+    backgroundsSpec.backgrounds.forEach(this._createBackground(tilesMap));
     backgroundsSpec.animations.forEach(this._createAnimation.bind(this));
   }
 
@@ -22,7 +22,7 @@ export default class BackgroundMap {
     this.animations.set(animSpec.name, animSpec);
   }
 
-  _createBackground(spriteMap) {
+  _createBackground(tilesMap) {
     return bgSpec => {
       const buffer = document.createElement('canvas');
 
@@ -34,8 +34,8 @@ export default class BackgroundMap {
       const context = buffer.getContext('2d');
       this._fillBuffer(context, bgSpec.color);
 
-      // Draw spriteMap into the buffer
-      bgSpec.fill.forEach(this._drawToBuffer(context, spriteMap));
+      // Draw tilesMap into the buffer
+      bgSpec.fill.forEach(this._drawToBuffer(context, tilesMap));
 
       // Index background buffer
       this.backgrounds.set(bgSpec.name, buffer);
@@ -51,7 +51,7 @@ export default class BackgroundMap {
     }
   }
 
-  _drawToBuffer(context, spriteMap) {
+  _drawToBuffer(context, tilesMap) {
     function normalizeRange(fn) {
       return range => {
         range = Array.isArray(range) ? range : [range, range];
@@ -63,7 +63,7 @@ export default class BackgroundMap {
       rangeX.forEach(x => {
         rangeY.forEach(y => {
           let spriteName = names[nameIndex++ % names.length];
-          spriteMap.draw(spriteName, context, new Vec2(x, y), index || 0);
+          tilesMap.draw(spriteName, context, new Vec2(x, y), index || 0);
         }, step.y);
       }, step.x);
     }

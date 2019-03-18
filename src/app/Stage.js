@@ -2,13 +2,11 @@ import Level from "./Level";
 
 export default class Stage {
 
-  constructor(stageSpec, spriteMap) {
-    this.spriteMap = spriteMap;
-
+  constructor(stageSpec, tilesMap, charactersMap) {
     // Prepares stage levels.
     Object.keys(stageSpec).forEach(levelName => {
       let levelSpec = stageSpec[levelName];
-      this[levelName] = new Level(levelSpec, spriteMap);
+      this[levelName] = new Level(levelSpec, tilesMap, charactersMap);
     });
   }
 }

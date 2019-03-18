@@ -1,7 +1,7 @@
-import Vect2 from './Vec2';
-import { degToRad } from './math';
-import { castArray } from './utils';
-import config from '../config';
+import { Vec2 } from './libs/math';
+import { degToRad } from './libs/math';
+import { castArray } from './libs/utils';
+import config from './config';
 
 export default class SpriteMap {
   constructor(spritesSpec, image) {
@@ -16,8 +16,8 @@ export default class SpriteMap {
   _defineSprite(spriteSpec) {
     const params = {
       name: spriteSpec.name,
-      pos: new Vect2(spriteSpec.position[0], spriteSpec.position[1]),
-      size: new Vect2(
+      pos: new Vec2(spriteSpec.position[0], spriteSpec.position[1]),
+      size: new Vec2(
         spriteSpec.size[0] * config.gridSize,
         spriteSpec.size[1] * config.gridSize
       )
@@ -95,7 +95,7 @@ export default class SpriteMap {
     const width = size.x / config.gridSize;
     const height = size.y / config.gridSize;
     this.sprites.set(name, {
-      size: new Vect2(width, height),
+      size: new Vec2(width, height),
       buffers: castArray(buffers)
     });
   }

@@ -1,6 +1,6 @@
-import BackgroundMap from './BackgroundMap';
-import SpriteMap from './SpriteMap';
-import Stage from './Stage';
+import BackgroundMap from '../BackgroundMap';
+import SpriteMap from '../SpriteMap';
+import Stage from '../Stage';
 
 export function loadImage(imageFile) {
   return new Promise(resolve => {
@@ -16,14 +16,14 @@ export function loadSprites(spritesSpecName) {
     .then(([spritesSpec, image]) => new SpriteMap(spritesSpec, image));
 }
 
-export function loadBackgrounds(bgSpecName, spriteMap) {
+export function loadBackgrounds(bgSpecName, tilesMap) {
   return loadJson(`specs/${bgSpecName}`)
-    .then(bgSpec => new BackgroundMap(bgSpec, spriteMap));
+    .then(bgSpec => new BackgroundMap(bgSpec, tilesMap));
 }
 
-export function loadStage(stageNumber, spriteMap) {
+export function loadStage(stageNumber, tilesMap, charactersMap) {
   return loadJson(`stages/stage-${stageNumber}.json`)
-    .then(stageSpec => new Stage(stageSpec, spriteMap));
+    .then(stageSpec => new Stage(stageSpec, tilesMap, charactersMap));
 }
 
 export function loadJson(fileName) {

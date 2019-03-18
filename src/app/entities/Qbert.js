@@ -1,5 +1,4 @@
-import Vec2 from '../libs/Vec2';
-import Entity from '../libs/Entity';
+import Entity from '../Entity';
 import Jump from '../behaviors/Jump';
 
 const LEFT = 0;
