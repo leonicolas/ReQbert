@@ -25,43 +25,48 @@
       "definition": "rotated"
     },
     {
-      "name": "bl1-r",
+      "name": "bl-cleared",
       "position": [0, 32],
       "size": [3, 3]
     },
     {
+      "name": "bl1-r",
+      "position": [0, 80],
+      "size": [3, 3]
+    },
+    {
       "name": "bl1-f",
-      "position": [48, 32],
+      "position": [48, 80],
       "size": [3, 3]
     },
     {
       "name": "bl1-t",
-      "position": [96, 32],
+      "position": [96, 80],
       "size": [3, 3]
     },
     {
       "name": "bl1-b-z",
-      "position": [144, 32],
+      "position": [144, 80],
       "size": [3, 3]
     },
     {
       "name": "bl1-f-z",
-      "position": [192, 32],
+      "position": [192, 80],
       "size": [3, 3]
     },
     {
       "name": "bl1-f-x",
-      "position": [240, 32],
+      "position": [240, 80],
       "size": [3, 3]
     },
     {
       "name": "bl1-t-x",
-      "position": [288, 32],
+      "position": [288, 80],
       "size": [3, 3]
     },
     {
-      "name": "bl1-b-x",
-      "position": [336, 32],
+      "name": "bl1-r-x",
+      "position": [336, 80],
       "size": [3, 3]
     }
   ]

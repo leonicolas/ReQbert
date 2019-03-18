@@ -3,19 +3,24 @@ import { Vec2 } from './libs/math';
 import Layer from './Layer';
 import Qbert from './entities/Qbert'
 
+const REF_BLOCK_POS = new Vec2(3, 3);
+const BLOCKS_INI_POS = new Vec2(3, 3);
+
 export default class Level {
 
   constructor(levelSpec, tilesMap, charactersMap) {
+    // Initialize properties
     this.levelSpec = levelSpec;
     this.tilesMap = tilesMap;
     this.entitiesLayer = new Layer(new Vec2(0.5, 0.6), config.screen);
 
-    // Entities
+    // Create entities
     this.qbert = new Qbert(charactersMap, new Vec2(15, 1));
     this.entitiesLayer.addSprite(this.qbert);
 
-    // Buffer level cubes
-    this.buffer = this._initializeLevel(levelSpec);
+    // Initialize level
+    this._initializeBuffer();
+    this._initializeLevelBlocks(levelSpec);
   }
 
   update(deltaTime) {
@@ -27,28 +32,28 @@ export default class Level {
     this.entitiesLayer.render(context, deltaTime);
   }
 
-  _initializeLevel(levelSpec) {
-    // Creates buffer and gets buffer context.
-    const buffer = document.createElement('canvas');
-    buffer.width = config.screen.width;
-    buffer.height = config.screen.height;
+  _initializeBuffer() {
+    this.buffer = document.createElement('canvas');
+    this.buffer.width = config.screen.width;
+    this.buffer.height = config.screen.height;
+  }
 
-    const context = buffer.getContext('2d');
+  _initializeLevelBlocks(levelSpec) {
+    const context = this.buffer.getContext('2d');
 
     // Draw reference block into the level buffer.
-    this.tilesMap.draw(levelSpec.refBlock, context, new Vec2(3, 3));
+    this.tilesMap.draw(levelSpec.refBlock, context, REF_BLOCK_POS);
 
     // Draw level blocks into the level buffer.
-    let posX = 3, posY = 3;
+    let pos = BLOCKS_INI_POS.clone();
     levelSpec.blocks.forEach(line => {
       line.forEach(blockName => {
         if(blockName)
-          this.tilesMap.draw(blockName, context, new Vec2(posX, posY));
-        posX += 3;
+          this.tilesMap.draw(blockName, context, pos);
+        pos.moveX(3);
       });
-      posX = 3;
-      posY += 2;
+      pos.x = BLOCKS_INI_POS.x;
+      pos.moveY(2);
     });
-    return buffer;
   }
 }

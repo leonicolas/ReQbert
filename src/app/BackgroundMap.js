@@ -19,7 +19,7 @@ export default class BackgroundMap {
     animSpec.backgrounds = animSpec.frames.map(bgName =>
       backgrounds.get(bgName)
     );
-    this.animations.set(animSpec.name, animSpec);
+    this.animations.set(animSpec.name, createAnimation(animSpec.backgrounds, animSpec.frameTime));
   }
 
   _createBackground(tilesMap) {
@@ -101,13 +101,8 @@ export default class BackgroundMap {
   }
 
   getAnimation(animationName) {
-    const animSpec = this.animations.get(animationName);
-    const bgAnim = createAnimation(animSpec.backgrounds, animSpec.frameTime);
-    let elapsedTime = 0;
-    return { render: (context, time) => {
-      this._draw(context, bgAnim(elapsedTime));
-      elapsedTime += time;
-    }};
+    const animation = this.animations.get(animationName);
+    return animation;
   }
 
   _draw(context, frame) {

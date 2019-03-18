@@ -22,7 +22,15 @@ export class Vec2 {
   }
 
   move(x, y) {
+    this.moveX(x);
+    this.moveY(y);
+  }
+
+  moveX(x) {
     this.x += x;
+  }
+
+  moveY(y) {
     this.y += y;
   }
 }
