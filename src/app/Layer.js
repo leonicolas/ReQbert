@@ -3,9 +3,11 @@ import config from './config';
 export default class Layer {
 
   constructor(pos, size) {
+    // Initialize properties
     this.pos = pos;
     this.size = size;
     this.sprites = [];
+    // Initialize buffer
     this.buffer = document.createElement('canvas');
     this.buffer.width = size.width;
     this.buffer.height = size.height;

@@ -1,17 +1,23 @@
 import config from './config.js';
+
 import { castArray } from './libs/utils';
-import { createAnimation } from './libs/animation';
 import { Vec2 } from './libs/math';
+
+import Animation from './Animation';
+import Sprite from './Sprite';
 import Range from './Range';
 
 export default class BackgroundMap {
+
   constructor(backgroundsSpec, tilesMap) {
     this.size = new Vec2(config.screen.width, config.screen.height);
     this.backgrounds = new Map();
-    this.animations = new Map();
+    backgroundsSpec.backgrounds.forEach(bgSpec => this._createBackground(bgSpec, tilesMap));
+    backgroundsSpec.animations.forEach(animSpec => this._createAnimation(animSpec));
+  }
 
-    backgroundsSpec.backgrounds.forEach(this._createBackground(tilesMap));
-    backgroundsSpec.animations.forEach(this._createAnimation.bind(this));
+  get(bgName) {
+    return this.backgrounds.get(bgName);
   }
 
   _createAnimation(animSpec) {
@@ -19,27 +25,24 @@ export default class BackgroundMap {
     animSpec.backgrounds = animSpec.frames.map(bgName =>
       backgrounds.get(bgName)
     );
-    this.animations.set(animSpec.name, createAnimation(animSpec.backgrounds, animSpec.frameTime));
+    this.backgrounds.set(animSpec.name, new Animation(animSpec.backgrounds, animSpec.frameTime));
   }
 
-  _createBackground(tilesMap) {
-    return bgSpec => {
-      const buffer = document.createElement('canvas');
+  _createBackground(bgSpec, tilesMap) {
+    // Buffer initialize
+    const buffer = document.createElement('canvas');
+    buffer.width = this.size.x;
+    buffer.height = this.size.y;
 
-      // Buffer size
-      buffer.width = this.size.x;
-      buffer.height = this.size.y;
+    // Fill buffer with defined color
+    const context = buffer.getContext('2d');
+    this._fillBuffer(context, bgSpec.color);
 
-      // Fill buffer with defined color
-      const context = buffer.getContext('2d');
-      this._fillBuffer(context, bgSpec.color);
+    // Draw tilesMap into the buffer
+    bgSpec.fill.forEach(this._drawToBuffer(context, tilesMap));
 
-      // Draw tilesMap into the buffer
-      bgSpec.fill.forEach(this._drawToBuffer(context, tilesMap));
-
-      // Index background buffer
-      this.backgrounds.set(bgSpec.name, buffer);
-    };
+    // Index background buffer
+    this.backgrounds.set(bgSpec.name, new Sprite(buffer));
   }
 
   _fillBuffer(context, color) {
@@ -91,21 +94,5 @@ export default class BackgroundMap {
         );
       });
     };
-  }
-
-  get(bgName) {
-    const bg = this.backgrounds.get(bgName);
-    return { render: (context) => {
-      this._draw(context, bg);
-    }};
-  }
-
-  getAnimation(animationName) {
-    const animation = this.animations.get(animationName);
-    return animation;
-  }
-
-  _draw(context, frame) {
-    context.drawImage(frame, 0, 0);
   }
 }

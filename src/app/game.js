@@ -16,7 +16,7 @@ async function main(canvas) {
 
   // Compositor
   const compositor = new Compositor();
-  compositor.addLayer(bgMap.getAnimation('level-cleared'));
+  compositor.addLayer(bgMap.get('level-cleared'));
   //compositor.addLayer(bgMap.get('bg-game-1'));
   compositor.addLayer(stage1.level1);
 
