@@ -9,8 +9,8 @@ export default class Animation {
   }
 
   render(context, deltaTime) {
-    const frameIndex = Math.floor(deltaTime / this.frameTime) % this.frames.length;
-    context.drawImage(this.frames[frameIndex], this.pos.x, this.pos.y);
+    const frameIndex = Math.floor(this.elapsedTime / this.frameTime) % this.frames.length;
+    this.frames[frameIndex].render(context, deltaTime);
     this.elapsedTime += deltaTime;
   }
 }

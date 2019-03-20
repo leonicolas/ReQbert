@@ -8,6 +8,6 @@ export default class Sprite {
   }
 
   render(context) {
-    context.draw(this.buffer, this.pos.x, this.pos.y);
+    context.drawImage(this.buffer, this.pos.x, this.pos.y);
   }
 }

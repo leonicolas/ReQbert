@@ -3,16 +3,18 @@ import { Vec2 } from './libs/math';
 import Layer from './Layer';
 import Qbert from './entities/Qbert'
 
+const ENTITIES_LAYER_POS = new Vec2(0.5, 0.6);
 const REF_BLOCK_POS = new Vec2(3, 3);
 const BLOCKS_INI_POS = new Vec2(3, 3);
 
 export default class Level {
 
-  constructor(levelSpec, tilesMap, charactersMap) {
+  constructor(levelSpec, tilesMap, charactersMap, animations) {
     // Initialize properties
     this.levelSpec = levelSpec;
     this.tilesMap = tilesMap;
-    this.entitiesLayer = new Layer(new Vec2(0.5, 0.6), config.screen);
+    this.entitiesLayer = new Layer(ENTITIES_LAYER_POS, config.screen);
+    this.animations = animations;
 
     // Create entities
     this.qbert = new Qbert(charactersMap, new Vec2(15, 1));
