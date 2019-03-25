@@ -1,5 +1,6 @@
 {
   "imageFile": "tiles.png",
+
   "sprites": [
     {
       "name": "brick",
@@ -10,19 +11,19 @@
       "name": "blueTriangle",
       "position": [0, 0],
       "size": [2, 1],
-      "definition": "rotated"
+      "transformation": "rotated"
     },
     {
       "name": "greenTriangle",
       "position": [32, 0],
       "size": [2, 1],
-      "definition": "rotated"
+      "transformation": "rotated"
     },
     {
       "name": "redTriangle",
       "position": [64, 0],
       "size": [2, 1],
-      "definition": "rotated"
+      "transformation": "rotated"
     },
     {
       "name": "bl-cleared",
@@ -68,6 +69,14 @@
       "name": "bl1-r-x",
       "position": [336, 80],
       "size": [3, 3]
+    }
+  ],
+
+  "animations": [
+    {
+      "name": "bl1-f-r",
+      "frameTime": 300,
+      "frames": ["bl1-f-z", "bl1-f", "bl1-b-z", "bl1-t"]
     }
   ]
 }

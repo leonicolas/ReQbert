@@ -1,24 +1,31 @@
 import config from './config';
-import { Vec2 } from './libs/math';
+import { Vec2, Matrix } from './libs/math';
 import Layer from './Layer';
 import Qbert from './entities/Qbert'
 
-const ENTITIES_LAYER_POS = new Vec2(0.5, 0.6);
-const REF_BLOCK_POS = new Vec2(3, 3);
-const BLOCKS_INI_POS = new Vec2(3, 3);
+const entitiesLayerPos = new Vec2(0.5, 0.6);
+
+const refBlockPos = new Vec2(3, 3);
+const blocksPos = new Vec2(3, 3);
+const blocksDistance = new Vec2(3, 2);
 
 export default class Level {
 
-  constructor(levelSpec, tilesMap, charactersMap, animations) {
+  constructor(levelSpec, blocksBuffer, charactersMap, animations) {
     // Initialize properties
     this.levelSpec = levelSpec;
-    this.tilesMap = tilesMap;
-    this.entitiesLayer = new Layer(ENTITIES_LAYER_POS, config.screen);
+    this.blocksBuffer = blocksBuffer;
+    this.blocksData = new Matrix();
+    this.entitiesLayer = new Layer(entitiesLayerPos, config.screen);
     this.animations = animations;
 
     // Create entities
     this.qbert = new Qbert(charactersMap, new Vec2(15, 1));
     this.entitiesLayer.addSprite(this.qbert);
+
+    this.qbert.jump.addOnStartHandler((behaviour, direction) => {
+      console.log(this.qbert.pos, direction);
+    });
 
     // Initialize level
     this._initializeBuffer();
@@ -44,18 +51,20 @@ export default class Level {
     const context = this.buffer.getContext('2d');
 
     // Draw reference block into the level buffer.
-    this.tilesMap.draw(levelSpec.refBlock, context, REF_BLOCK_POS);
+    this.blocksBuffer.draw(levelSpec.refBlock, context, refBlockPos);
 
     // Draw level blocks into the level buffer.
-    let pos = BLOCKS_INI_POS.clone();
+    let pos = blocksPos.clone();
     levelSpec.blocks.forEach(line => {
       line.forEach(blockName => {
-        if(blockName)
-          this.tilesMap.draw(blockName, context, pos);
-        pos.moveX(3);
+        if(blockName) {
+          this.blocksData.set(pos.x, pos.y, blockName);
+          this.blocksBuffer.draw(blockName, context, pos);
+        }
+        pos.moveX(blocksDistance.x);
       });
-      pos.x = BLOCKS_INI_POS.x;
-      pos.moveY(2);
+      pos.x = blocksPos.x;
+      pos.moveY(blocksDistance.y);
     });
   }
 }

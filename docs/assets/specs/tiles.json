@@ -10,19 +10,19 @@
       "name": "blueTriangle",
       "position": [0, 0],
       "size": [2, 1],
-      "definition": "rotated"
+      "transformation": "rotated"
     },
     {
       "name": "greenTriangle",
       "position": [32, 0],
       "size": [2, 1],
-      "definition": "rotated"
+      "transformation": "rotated"
     },
     {
       "name": "redTriangle",
       "position": [64, 0],
       "size": [2, 1],
-      "definition": "rotated"
+      "transformation": "rotated"
     },
     {
       "name": "bl1-r",

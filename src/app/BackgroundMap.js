@@ -4,28 +4,34 @@ import { castArray } from './libs/utils';
 import { Vec2 } from './libs/math';
 
 import Animation from './Animation';
-import Sprite from './Sprite';
+import Background from './Background';
 import Range from './Range';
 
 export default class BackgroundMap {
 
   constructor(backgroundsSpec, tilesMap) {
     this.size = new Vec2(config.screen.width, config.screen.height);
-    this.backgrounds = new Map();
+    this.backgroundImages = new Map();
+    this.backgroundAnimations = new Map();
     backgroundsSpec.backgrounds.forEach(bgSpec => this._createBackground(bgSpec, tilesMap));
     backgroundsSpec.animations.forEach(animSpec => this._createAnimation(animSpec));
   }
 
   get(bgName) {
-    return this.backgrounds.get(bgName);
+    return new Background(this.backgroundImages.get(bgName));
+  }
+
+  getAnimation(animName) {
+    const animationData = this.backgroundAnimations.get(animName);
+    return new Animation(animationData);
   }
 
   _createAnimation(animSpec) {
-    const backgrounds = this.backgrounds;
-    animSpec.backgrounds = animSpec.frames.map(bgName =>
-      backgrounds.get(bgName)
-    );
-    this.backgrounds.set(animSpec.name, new Animation(animSpec.backgrounds, animSpec.frameTime));
+    const frames = animSpec.frames.map(bgName => this.backgroundImages.get(bgName));
+    this.backgroundAnimations.set(animSpec.name, {
+      frames,
+      frameTime: animSpec.frameTime
+    });
   }
 
   _createBackground(bgSpec, tilesMap) {
@@ -41,8 +47,8 @@ export default class BackgroundMap {
     // Draw tilesMap into the buffer
     bgSpec.fill.forEach(this._drawToBuffer(context, tilesMap));
 
-    // Index background buffer
-    this.backgrounds.set(bgSpec.name, new Sprite(buffer));
+    // Save backgrounds
+    this.backgroundImages.set(bgSpec.name, buffer);
   }
 
   _fillBuffer(context, color) {

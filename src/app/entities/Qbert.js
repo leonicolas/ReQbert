@@ -9,14 +9,14 @@ export default class Qbert extends Entity {
   constructor(spriteMap, pos) {
     super(spriteMap, pos);
 
-    this.actions = {
-      'idle-front': this.spriteMap.get('qbert-front'),
-      'idle-back': this.spriteMap.get('qbert-back'),
-      'jumping-front': this.spriteMap.get('qbert-front-jumping'),
-      'jumping-back': this.spriteMap.get('qbert-back-jumping'),
+    this.sprites = {
+      'idle-front': this.spriteMap.createNewSprite('qbert-front'),
+      'idle-back': this.spriteMap.createNewSprite('qbert-back'),
+      'jumping-front': this.spriteMap.createNewSprite('qbert-front-jumping'),
+      'jumping-back': this.spriteMap.createNewSprite('qbert-back-jumping'),
     };
 
-    this.sprite = this.actions.idleFront;
+    this.sprite = this.sprites.idleFront;
     this.xDirection = LEFT;
 
     this.addBehaviour(new Jump());
@@ -26,11 +26,12 @@ export default class Qbert extends Entity {
     this.xDirection = this.jump.isToLeft() ? LEFT : RIGHT;
     let state = this.jump.isJumping() ? 'jumping' : 'idle';
     let yDirection = this.jump.isToDown() ? 'front' : 'back';
-    this.sprite = this.actions[`${state}-${yDirection}`];
+    this.sprite = this.sprites[`${state}-${yDirection}`];
+    this.sprite.pos.set(this.pos.x, this.pos.y);
     super.update(deltaTime);
   }
 
-  render(context) {
-    this.sprite.render(context, 0, this.pos, this.xDirection);
+  render(context, deltaTime) {
+    this.sprite.render(context, deltaTime, this.xDirection);
   }
 }

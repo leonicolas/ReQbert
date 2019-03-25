@@ -7,7 +7,6 @@ export default class Stage {
     this.tilesMap = tilesMap;
     this.charactersMap = charactersMap;
 
-    this._initializeAnimations();
     this._initializeLevels();
   }
 
@@ -21,9 +20,5 @@ export default class Stage {
         this.animations
       );
     });
-  }
-
-  _initializeAnimations() {
-
   }
 }

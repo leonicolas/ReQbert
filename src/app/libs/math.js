@@ -34,3 +34,23 @@ export class Vec2 {
     this.y += y;
   }
 }
+
+export class Matrix {
+  constructor() {
+    this.matrix = [];
+  }
+
+  set(x, y, value) {
+    let col = this.matrix[x];
+    if(!col) {
+      col = [];
+      this.matrix[x] = col;
+    }
+    col[y] = value;
+  }
+
+  get(x, y) {
+    let col = this.matrix[x];
+    return col ? col[y] : undefined;
+  }
+}
