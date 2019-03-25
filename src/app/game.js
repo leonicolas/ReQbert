@@ -21,7 +21,7 @@ async function main(canvas) {
   //compositor.addLayer(bgMap.getAnimation('level-cleared'));
   compositor.addLayer(bgMap.get('bg-game-1'));
   compositor.addLayer(stage1.level1);
-  //compositor.addLayer(tilesMap.createNewAnimation('bl1-f-r', new Vec2(3, 11)));
+  compositor.addLayer(tilesMap.createNewAnimation('bl1-f-r', new Vec2(3, 11)));
   //compositor.addLayer(tilesMap.createNewSprite('bl-cleared'));
 
   // Time based main loop
