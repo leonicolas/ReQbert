@@ -1,59 +1,97 @@
 import { Vec2 } from './libs/math';
 import { degToRad } from './libs/math';
 import { castArray } from './libs/utils';
+
 import config from './config';
+import Sprite from './Sprite';
+import Animation from './Animation';
 
 export default class SpriteMap {
-  constructor(spritesSpec, image) {
-    this.image = image;
-    this.sprites = new Map();
 
-    spritesSpec.sprites.forEach(spriteSpec => {
-      this._defineSprite(spriteSpec);
+  constructor(spritesSpec, spriteImageMap) {
+    this.spriteImageMap = spriteImageMap;
+    this.images = new Map();
+    this.animations = new Map();
+    spritesSpec.sprites.forEach(spriteSpec => this._createSpriteBuffer(spriteSpec));
+    const animations = spritesSpec.animations || [];
+    animations.forEach(animSpec => this._createAnimationBuffer(animSpec));
+  }
+
+  getImage(imageName) {
+    return this.images.get(imageName);
+  }
+
+  getAnimation(animationName) {
+    return this.animations.get(animationName);
+  }
+
+  createNewSprite(imageName, pos) {
+    const image = this.getImage(imageName);
+    return new Sprite(image, pos);
+  }
+
+  createNewAnimation(animationName, pos) {
+    const animation = this.getAnimation(animationName);
+    return new Animation(animation, pos);
+  }
+
+  draw(imageName, context, pos = new Vec2(0, 0), transformIndex = 0) {
+    const image = this.getImage(imageName);
+    context.drawImage(
+      image[transformIndex],
+      pos.x * config.gridSize,
+      pos.y * config.gridSize
+    );
+  }
+
+  _createAnimationBuffer(animSpec) {
+    let framesImages = animSpec.frames.map(
+      frameName => this.getImage(frameName)
+    );
+    this.animations.set(animSpec.name, {
+      frames: framesImages,
+      frameTime: animSpec.frameTime
     });
   }
 
-  _defineSprite(spriteSpec) {
-    const params = {
-      name: spriteSpec.name,
-      pos: new Vec2(spriteSpec.position[0], spriteSpec.position[1]),
-      size: new Vec2(
-        spriteSpec.size[0] * config.gridSize,
-        spriteSpec.size[1] * config.gridSize
-      )
-    };
-    switch (spriteSpec.definition) {
+  _createSpriteBuffer(spriteSpec) {
+    const pos = new Vec2(spriteSpec.position[0], spriteSpec.position[1]);
+    const size = new Vec2(
+      spriteSpec.size[0] * config.gridSize,
+      spriteSpec.size[1] * config.gridSize
+    );
+    const buffers = castArray(
+      this._createTransformedBuffer(pos, size, spriteSpec.transformation)
+    );
+    this.images.set(spriteSpec.name, buffers);
+  }
+
+  _createTransformedBuffer(pos, size, transformation) {
+    switch (transformation) {
       case 'rotated':
-        this._defineRotated(params);
-        break;
+        return this._createRotatedBuffer(pos, size);
+
       case 'fliped':
-        this._defineFliped(params);
-        break;
+        return this._createFliped(pos, size);
+
       default:
-        this._define(params);
+        return this._createBuffer(pos, size);
     }
   }
 
-  _define({ name, pos, size }) {
-    const buffer = this._createBuffer(name, pos, size);
-    this._set(name, size, buffer);
-  }
-
-  _defineRotated({ name, pos, size }) {
-    const buffers = [0, 90, 180, 270].map(rotation =>
-      this._createBuffer(name, pos, size, { rotation })
+  _createRotatedBuffer(pos, size) {
+    return [0, 90, 180, 270].map(rotation =>
+      this._createBuffer(pos, size, { rotation })
     );
-    this._set(name, size, buffers);
   }
 
-  _defineFliped({ name, pos, size }) {
-    const buffers = [false, true].map(fliped =>
-      this._createBuffer(name, pos, size, { fliped })
+  _createFliped(pos, size) {
+    return [false, true].map(fliped =>
+      this._createBuffer(pos, size, { fliped })
     );
-    this._set(name, size, buffers);
   }
 
-  _createBuffer(name, pos, size, { rotation, fliped } = {}) {
+  _createBuffer(pos, size, { rotation, fliped } = {}) {
     const buffer = document.createElement('canvas');
     const isRotated = rotation === 90 || rotation === 270;
     const spriteSize = size.clone();
@@ -73,57 +111,14 @@ export default class SpriteMap {
       context.translate(transX, transY);
       context.rotate(degToRad(rotation));
     }
+
     context.drawImage(
-      this.image,
-      pos.x,
-      pos.y,
-      size.x,
-      size.y,
-      0,
-      0,
-      size.x,
-      size.y
+      this.spriteImageMap,
+      pos.x, pos.y,
+      size.x, size.y,
+      0, 0,
+      size.x, size.y
     );
     return buffer;
-  }
-
-  _get(name) {
-    return this.sprites.get(name);
-  }
-
-  _set(name, size, buffers) {
-    const width = size.x / config.gridSize;
-    const height = size.y / config.gridSize;
-    this.sprites.set(name, {
-      size: new Vec2(width, height),
-      buffers: castArray(buffers)
-    });
-  }
-
-  _draw(sprite, context, pos = { x: 0, y: 0}, index = 0) {
-    context.drawImage(
-      sprite.buffers[index],
-      pos.x * config.gridSize,
-      pos.y * config.gridSize
-    );
-  }
-
-  get(name) {
-    const sprite = this._get(name);
-    return {
-      render: (context, time, pos, index) => {
-        this._draw(sprite, context, pos, index);
-      }
-    };
-  }
-
-  getSpriteSize(name) {
-    const sprite = this._get(name);
-    return sprite.size;
-  }
-
-  draw(name, context, pos, index = 0) {
-    const sprite = this._get(name);
-    this._draw(sprite, context, pos, index);
   }
 }

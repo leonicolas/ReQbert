@@ -2,7 +2,7 @@
   "animations": [
     {
       "name": "level-cleared",
-      "frameTime": 0.15,
+      "frameTime": 150,
       "frames": ["bg-game-1", "bg-game-2", "bg-game-3"]
     }
   ],

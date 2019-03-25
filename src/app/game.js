@@ -1,4 +1,6 @@
 import { loadBackgrounds, loadSprites, loadStage } from './libs/loaders';
+import { Vec2 } from './libs/math';
+
 import Timer from './Timer';
 import Compositor from './Compositor';
 import config from './config';
@@ -19,24 +21,31 @@ async function main(canvas) {
   //compositor.addLayer(bgMap.getAnimation('level-cleared'));
   compositor.addLayer(bgMap.get('bg-game-1'));
   compositor.addLayer(stage1.level1);
+  compositor.addLayer(tilesMap.createNewAnimation('bl1-f-r', new Vec2(3, 11)));
+  //compositor.addLayer(tilesMap.createNewSprite('bl-cleared'));
 
   // Time based main loop
   const timer = new Timer();
 
   // Test code... it will be deleted
-  let finish = true;
+  let action = 0;
+  let currentAction = -1;
   let qbert = stage1.level1.qbert;
-  function jumpTest() {
-    if(!finish) return;
-    finish = false;
-    for(let time = 1; time <= 8; time++) {
-      if(time % 2) setTimeout(() => qbert.jump.leftDown(), time * 1000);
-      else setTimeout(() => qbert.jump.rightDown(), time * 1000);
-    }
+  let qbertActions = [
+    'leftDown','rightDown','leftDown','rightDown','leftDown','rightDown','leftDown','rightDown',
+    'rightUp' ,'leftUp'   ,'rightUp' ,'leftUp'   ,'rightUp' ,'leftUp'   ,'rightUp' ,'leftUp'
+  ];
+  // qbert.jump.addOnStartHandler((behavior, direction) => {
+  //   console.log("Stating jump", direction);
+  // });
+  qbert.jump.addOnFinishHandler(() => {
+    if(++action >= qbertActions.length) action = 0;
+  });
 
-    for(let time = 9; time <= 16; time++) {
-      if(time % 2) setTimeout(() => qbert.jump.rightUp(), time * 1000);
-      else setTimeout(() => { qbert.jump.leftUp(); if(time === 16) finish = true; }, time * 1000);
+  function jumpTest() {
+    if(currentAction !== action) {
+      currentAction = action;
+      setTimeout(() => qbert.jump[qbertActions[action]](), 1000);
     }
   }
 
