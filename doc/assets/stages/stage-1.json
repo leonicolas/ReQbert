@@ -1,0 +1,32 @@
+{
+  "levels": {
+    "level1": {
+      "refBlock": "bl1-r",
+      "blocks": [
+        [null   , null   , null   , null   , "bl1-f", null   , null   , null   , null   ],
+        [null   , null   , null   , "bl1-f", null   , "bl1-t", null   , null   , null   ],
+        [null   , null   , "bl1-f", null   , "bl1-f", null   , "bl1-t", null   , null   ],
+        [null   , "bl1-t", null   , "bl1-t", null   , "bl1-t", null   , "bl1-f", null   ],
+        [null   , null   , "bl1-t", null   , "bl1-f", null   , "bl1-t", null   , "bl1-f"],
+        [null   , "bl1-f", null   , "bl1-f", null   , "bl1-t", null   , "bl1-t", null   ],
+        [null   , null   , "bl1-t", null   , "bl1-t", null   , "bl1-f", null   , null   ],
+        [null   , null   , null   , "bl1-f", null   , "bl1-f", null   , null   , null   ],
+        [null   , null   , null   , null   , "bl1-t", null   , null   , null   , null   ]
+      ]
+    },
+    "level2": {
+      "refBlock": "bl1-r",
+      "blocks": [
+        [null   , null   , null   , null   , "bl1-f", null   , null   , null   , null   ],
+        [null   , null   , null   , "bl1-f", null   , "bl1-t", null   , null   , null   ],
+        [null   , null   , "bl1-f", null   , "bl1-f", null   , "bl1-t", null   , null   ],
+        [null   , "bl1-t", null   , "bl1-t", null   , "bl1-t", null   , "bl1-f", null   ],
+        ["bl1-f", null   , "bl1-t", null   , "bl1-f", null   , "bl1-t", null   , "bl1-f"],
+        [null   , "bl1-f", null   , "bl1-f", null   , "bl1-t", null   , "bl1-t", null   ],
+        [null   , null   , "bl1-t", null   , "bl1-t", null   , "bl1-f", null   , null   ],
+        [null   , null   , null   , "bl1-f", null   , "bl1-f", null   , null   , null   ],
+        [null   , null   , null   , null   , "bl1-t", null   , null   , null   , null   ]
+      ]
+    }
+  }
+}
