@@ -1,0 +1,82 @@
+{
+  "imageFile": "tiles.png",
+
+  "sprites": [
+    {
+      "name": "brick",
+      "position": [0, 16],
+      "size": [1, 1]
+    },
+    {
+      "name": "blueTriangle",
+      "position": [0, 0],
+      "size": [2, 1],
+      "transformation": "rotated"
+    },
+    {
+      "name": "greenTriangle",
+      "position": [32, 0],
+      "size": [2, 1],
+      "transformation": "rotated"
+    },
+    {
+      "name": "redTriangle",
+      "position": [64, 0],
+      "size": [2, 1],
+      "transformation": "rotated"
+    },
+    {
+      "name": "bl-cleared",
+      "position": [0, 32],
+      "size": [3, 3]
+    },
+    {
+      "name": "bl1-r",
+      "position": [0, 80],
+      "size": [3, 3]
+    },
+    {
+      "name": "bl1-f",
+      "position": [48, 80],
+      "size": [3, 3]
+    },
+    {
+      "name": "bl1-t",
+      "position": [96, 80],
+      "size": [3, 3]
+    },
+    {
+      "name": "bl1-b-z",
+      "position": [144, 80],
+      "size": [3, 3]
+    },
+    {
+      "name": "bl1-f-z",
+      "position": [192, 80],
+      "size": [3, 3]
+    },
+    {
+      "name": "bl1-f-x",
+      "position": [240, 80],
+      "size": [3, 3]
+    },
+    {
+      "name": "bl1-t-x",
+      "position": [288, 80],
+      "size": [3, 3]
+    },
+    {
+      "name": "bl1-r-x",
+      "position": [336, 80],
+      "size": [3, 3]
+    }
+  ],
+
+  "animations": [
+    {
+      "name": "bl1-f-r",
+      "frameTime": 150,
+      "frames": ["bl1-f-z", "bl1-f", "bl1-b-z", "bl1-t"]
+    }
+  ]
+}
