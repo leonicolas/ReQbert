@@ -24,7 +24,7 @@ export default class Level {
     this.entitiesLayer.addSprite(this.qbert);
 
     this.qbert.jump.addOnStartHandler((behaviour, direction) => {
-      console.log(this.qbert.pos, direction);
+      //console.log(this.qbert.pos, direction);
     });
 
     // Initialize level

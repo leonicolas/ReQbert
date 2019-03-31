@@ -46,27 +46,27 @@
       "size": [3, 3]
     },
     {
-      "name": "bl1-b-z",
+      "name": "bl1-b-x",
       "position": [144, 80],
       "size": [3, 3]
     },
     {
-      "name": "bl1-f-z",
+      "name": "bl1-t-x",
       "position": [192, 80],
       "size": [3, 3]
     },
     {
-      "name": "bl1-f-x",
+      "name": "bl1-f-z",
       "position": [240, 80],
       "size": [3, 3]
     },
     {
-      "name": "bl1-t-x",
+      "name": "bl1-t-z",
       "position": [288, 80],
       "size": [3, 3]
     },
     {
-      "name": "bl1-r-x",
+      "name": "bl1-b-z",
       "position": [336, 80],
       "size": [3, 3]
     }
@@ -74,9 +74,39 @@
 
   "animations": [
     {
+      "name": "bl1-f-b",
+      "frameTime": 150,
+      "frames": ["bl1-b-x", "bl1-t"]
+    },
+    {
+      "name": "bl1-t-b",
+      "frameTime": 150,
+      "frames": ["bl1-t-x", "bl1-f"]
+    },
+    {
       "name": "bl1-f-r",
-      "frameTime": 300,
-      "frames": ["bl1-f-z", "bl1-f", "bl1-b-z", "bl1-t"]
+      "frameTime": 150,
+      "frames": ["bl1-f-z", "bl1-f"]
+    },
+    {
+      "name": "bl1-t-r",
+      "frameTime": 150,
+      "frames": ["bl1-t-z", "bl1-r"]
+    },
+    {
+      "name": "bl1-r-r",
+      "frameTime": 150,
+      "frames": ["bl1-b-z", "bl1-t"]
+    },
+    {
+      "name": "bl1-t-l",
+      "frameTime": 150,
+      "frames": ["bl1-b-z", "bl1-r"]
+    },
+    {
+      "name": "bl1-r-l",
+      "frameTime": 150,
+      "frames": ["bl1-t-z", "bl1-t"]
     }
   ]
 }
