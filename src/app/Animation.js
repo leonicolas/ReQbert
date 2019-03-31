@@ -6,8 +6,9 @@ export default class Animation {
 
   constructor(animationData, pos = new Vec2(0, 0)) {
     this.frames = animationData.frames;
+    this.framesNames = animationData.framesNames;
     this.frameTime = animationData.frameTime / 1000;
-    this.pos = pos;
+    this.pos = pos.clone();
 
     this.framesCount = this.frames.length;
     this.start();
@@ -28,8 +29,15 @@ export default class Animation {
     this.visible = false;
   }
 
-  render(context, deltaTime, transformIndex = 0) {
+  getFrameName(frameIndex) {
+    return this.framesNames[frameIndex];
+  }
 
+  getLastFrameName() {
+    return this.getFrameName(this.framesCount - 1);
+  }
+
+  render(context, deltaTime, transformIndex = 0) {
     if(this.loop || this.frameIndex + 1 < this.framesCount) {
       this.frameIndex = Math.floor(this.elapsedTime / this.frameTime) % this.framesCount;
       this.elapsedTime += deltaTime;

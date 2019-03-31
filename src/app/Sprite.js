@@ -11,7 +11,7 @@ export default class Sprite {
     } else {
       this.images = castArray(spriteData);
     }
-    this.pos = pos;
+    this.pos = pos.clone();
     this.transformIndex = 0;
   }
 

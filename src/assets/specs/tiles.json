@@ -74,14 +74,14 @@
 
   "animations": [
     {
-      "name": "bl1-f-b",
+      "name": "bl1-f-d",
       "frameTime": 150,
       "frames": ["bl1-b-x", "bl1-t"]
     },
     {
-      "name": "bl1-t-b",
+      "name": "bl1-f-u",
       "frameTime": 150,
-      "frames": ["bl1-t-x", "bl1-f"]
+      "frames": ["bl1-t-x", "bl1-t"]
     },
     {
       "name": "bl1-f-r",
@@ -89,14 +89,20 @@
       "frames": ["bl1-f-z", "bl1-f"]
     },
     {
-      "name": "bl1-t-r",
+      "name": "bl1-f-l",
       "frameTime": 150,
-      "frames": ["bl1-t-z", "bl1-r"]
+      "frames": ["bl1-f-z", "bl1-f"]
+    },
+
+    {
+      "name": "bl1-t-u",
+      "frameTime": 150,
+      "frames": ["bl1-b-x", "bl1-f"]
     },
     {
-      "name": "bl1-r-r",
+      "name": "bl1-t-d",
       "frameTime": 150,
-      "frames": ["bl1-b-z", "bl1-t"]
+      "frames": ["bl1-t-x", "bl1-f"]
     },
     {
       "name": "bl1-t-l",
@@ -104,9 +110,30 @@
       "frames": ["bl1-b-z", "bl1-r"]
     },
     {
+      "name": "bl1-t-r",
+      "frameTime": 150,
+      "frames": ["bl1-t-z", "bl1-r"]
+    },
+
+    {
+      "name": "bl1-r-u",
+      "frameTime": 150,
+      "frames": ["bl1-t-z", "bl1-t"]
+    },
+    {
+      "name": "bl1-r-d",
+      "frameTime": 150,
+      "frames": ["bl1-b-z", "bl1-t"]
+    },
+    {
       "name": "bl1-r-l",
       "frameTime": 150,
       "frames": ["bl1-t-z", "bl1-t"]
+    },
+    {
+      "name": "bl1-r-r",
+      "frameTime": 150,
+      "frames": ["bl1-b-z", "bl1-t"]
     }
   ]
 }

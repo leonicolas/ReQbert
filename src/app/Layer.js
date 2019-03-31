@@ -4,7 +4,7 @@ export default class Layer {
 
   constructor(pos, size) {
     // Initialize properties
-    this.pos = pos;
+    this.pos = pos.clone();
     this.size = size;
     this.sprites = [];
     // Initialize buffer

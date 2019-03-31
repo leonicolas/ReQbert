@@ -3,7 +3,7 @@ export default class Entity {
 
   constructor(spriteMap, pos) {
     this.spriteMap = spriteMap;
-    this.pos = pos;
+    this.pos = pos.clone();
     this.behaviors = [];
   }
 

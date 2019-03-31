@@ -19,21 +19,8 @@ async function main(canvas) {
   // Compositor
   const compositor = new Compositor();
   //compositor.addLayer(bgMap.getAnimation('level-cleared'));
-  let cube1 = tilesMap.createNewAnimation('bl1-t-l', new Vec2(3, 11));
-  let cube2 = tilesMap.createNewAnimation('bl1-r-l', new Vec2(3, 11));
-  let cube = cube2;
   compositor.addLayer(bgMap.get('bg-game-1'));
   compositor.addLayer(stage1.level1);
-  compositor.addLayer(cube1);
-  compositor.addLayer(cube2);
-
-  setInterval(() => {
-    cube.hide();
-    cube = cube == cube1 ? cube2 : cube1;
-    cube.show();
-    cube.start();
-  }, 1500);
-  //compositor.addLayer(tilesMap.createNewSprite('bl-cleared'));
 
   // Time based main loop
   const timer = new Timer();

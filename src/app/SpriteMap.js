@@ -25,12 +25,12 @@ export default class SpriteMap {
     return this.animations.get(animationName);
   }
 
-  createNewSprite(imageName, pos) {
+  newSprite(imageName, pos) {
     const image = this.getImage(imageName);
     return new Sprite(image, pos);
   }
 
-  createNewAnimation(animationName, pos) {
+  newAnimation(animationName, pos) {
     const animation = this.getAnimation(animationName);
     return new Animation(animation, pos);
   }
@@ -49,6 +49,7 @@ export default class SpriteMap {
       frameName => this.getImage(frameName)
     );
     this.animations.set(animSpec.name, {
+      framesNames: animSpec.frames,
       frames: framesImages,
       frameTime: animSpec.frameTime
     });

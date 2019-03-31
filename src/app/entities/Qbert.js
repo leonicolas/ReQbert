@@ -10,10 +10,10 @@ export default class Qbert extends Entity {
     super(spriteMap, pos);
 
     this.sprites = {
-      'idle-front': this.spriteMap.createNewSprite('qbert-front'),
-      'idle-back': this.spriteMap.createNewSprite('qbert-back'),
-      'jumping-front': this.spriteMap.createNewSprite('qbert-front-jumping'),
-      'jumping-back': this.spriteMap.createNewSprite('qbert-back-jumping'),
+      'idle-front': this.spriteMap.newSprite('qbert-front'),
+      'idle-back': this.spriteMap.newSprite('qbert-back'),
+      'jumping-front': this.spriteMap.newSprite('qbert-front-jumping'),
+      'jumping-back': this.spriteMap.newSprite('qbert-back-jumping'),
     };
 
     this.sprite = this.sprites.idleFront;

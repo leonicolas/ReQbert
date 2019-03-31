@@ -16,8 +16,7 @@ export default class Stage {
       this[levelName] = new Level(
         levelSpec,
         this.tilesMap,
-        this.charactersMap,
-        this.animations
+        this.charactersMap
       );
     });
   }
