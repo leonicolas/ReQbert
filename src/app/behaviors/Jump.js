@@ -15,7 +15,7 @@ export default class Jump extends Behavior {
     this.ratio = new Vec2(3, 2);
     this.lastPos = this.direction.clone();
     this.onStartHandlers = new Set();
-    this.onFinishHandlers = new Set();
+    this.onEndHandlers = new Set();
   }
 
   leftDown() {
@@ -54,12 +54,20 @@ export default class Jump extends Behavior {
     return this.jumping;
   }
 
-  addOnStartHandler(handler) {
+  addStartHandler(handler) {
     this.onStartHandlers.add(handler);
   }
 
-  addOnFinishHandler(handler) {
-    this.onFinishHandlers.add(handler);
+  addEndHandler(handler) {
+    this.onEndHandlers.add(handler);
+  }
+
+  triggerOnStartHandlers(direction) {
+    this.onStartHandlers.forEach(handler => handler(this, direction));
+  }
+
+  triggerOnEndHandlers() {
+    this.onEndHandlers.forEach(handler => handler(this));
   }
 
   update(entity, deltaTime) {
@@ -75,7 +83,7 @@ export default class Jump extends Behavior {
     this._moveEntity(entity);
 
     if(finished) {
-      this._triggerOnFinishHandlers();
+      this.triggerOnEndHandlers();
       this._normalizeEntityPos(entity);
       this.jumping = false;
     }
@@ -113,14 +121,6 @@ export default class Jump extends Behavior {
     this.maxAngle = 90;
     this.refAngle = directionY > 0 ? 0 : 90;
 
-    this._triggerOnStartHandlers(this.direction.clone());
-  }
-
-  _triggerOnStartHandlers(direction) {
-    this.onStartHandlers.forEach(handler => handler(this, direction));
-  }
-
-  _triggerOnFinishHandlers() {
-    this.onFinishHandlers.forEach(handler => handler(this));
+    this.triggerOnStartHandlers(this.direction.clone());
   }
 }

@@ -27,7 +27,7 @@ export default class Level {
     this.entitiesLayer.addSprite(this.qbert);
 
     // Add jump event handler
-    this.qbert.jump.addOnStartHandler((behaviour, direction) => {
+    this.qbert.jump.addStartHandler((behaviour, direction) => {
       this.currentBlock = this.blocksData.get(this.qbert.pos.y, this.qbert.pos.x);
       this.currentBlock.rotate(direction);
     });
@@ -65,7 +65,9 @@ export default class Level {
     levelSpec.blocks.forEach(line => {
       line.forEach(blockName => {
         if(blockName) {
-          this.blocksData.set(pos.y, pos.x, new Block(blockName, this.tilesMap, pos));
+          let block = new Block(blockName, this.tilesMap, pos);
+          block.addRotateEndHandler(() => console.log("Rotation ended!"));
+          this.blocksData.set(pos.y, pos.x, block);
           this.tilesMap.draw(blockName, this.context, pos);
         }
         pos.moveX(blocksDistance.x);

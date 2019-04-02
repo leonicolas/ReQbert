@@ -33,7 +33,7 @@ async function main(canvas) {
     'leftDown','rightDown','leftDown','rightDown','leftDown','rightDown','leftDown','rightDown',
     'rightUp' ,'leftUp'   ,'rightUp' ,'leftUp'   ,'rightUp' ,'leftUp'   ,'rightUp' ,'leftUp'
   ];
-  qbert.jump.addOnFinishHandler(() => {
+  qbert.jump.addEndHandler(() => {
     if(++action >= qbertActions.length) action = 0;
   });
 

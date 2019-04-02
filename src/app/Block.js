@@ -10,7 +10,16 @@ export default class Block {
     this.blockName = blockName;
     this.tilesMap = tilesMap;
     this.pos = pos.clone();
+    this.onRotateEndHandlers = new Set();
     this._initializeAnimations();
+  }
+
+  addRotateEndHandler(handler) {
+    this.onRotateEndHandlers.add(handler);
+  }
+
+  triggerOnRotateEndHandler() {
+    this.onRotateEndHandlers.forEach(handler => handler(this));
   }
 
   rotate(direction) {
@@ -34,20 +43,30 @@ export default class Block {
   }
 
   _initializeAnimations() {
+    let blocksSpec = [
+      [`bl1-f-${UP}-${RIGHT}`  , 'bl1-f-u'],
+      [`bl1-f-${DOWN}-${LEFT}` , 'bl1-f-d'],
+      [`bl1-f-${UP}-${LEFT}`   , 'bl1-f-l'],
+      [`bl1-f-${DOWN}-${RIGHT}`, 'bl1-f-r'],
+
+      [`bl1-r-${UP}-${RIGHT}`  , 'bl1-r-u'],
+      [`bl1-r-${DOWN}-${LEFT}` , 'bl1-r-d'],
+      [`bl1-r-${UP}-${LEFT}`   , 'bl1-r-l'],
+      [`bl1-r-${DOWN}-${RIGHT}`, 'bl1-r-r'],
+
+      [`bl1-t-${UP}-${RIGHT}`  , 'bl1-t-u'],
+      [`bl1-t-${DOWN}-${LEFT}` , 'bl1-t-d'],
+      [`bl1-t-${UP}-${LEFT}`   , 'bl1-t-l'],
+      [`bl1-t-${DOWN}-${RIGHT}`, 'bl1-t-r'],
+    ];
+
     this.blockAnimMap = new Map();
-    this.blockAnimMap.set(`bl1-f-${UP}-${RIGHT}`, this.tilesMap.newAnimation('bl1-f-u'));
-    this.blockAnimMap.set(`bl1-f-${DOWN}-${LEFT}`, this.tilesMap.newAnimation('bl1-f-d'));
-    this.blockAnimMap.set(`bl1-f-${UP}-${LEFT}`, this.tilesMap.newAnimation('bl1-f-l'));
-    this.blockAnimMap.set(`bl1-f-${DOWN}-${RIGHT}`, this.tilesMap.newAnimation('bl1-f-r'));
-
-    this.blockAnimMap.set(`bl1-r-${UP}-${RIGHT}`, this.tilesMap.newAnimation('bl1-r-u'));
-    this.blockAnimMap.set(`bl1-r-${DOWN}-${LEFT}`, this.tilesMap.newAnimation('bl1-r-d'));
-    this.blockAnimMap.set(`bl1-r-${UP}-${LEFT}`, this.tilesMap.newAnimation('bl1-r-l'));
-    this.blockAnimMap.set(`bl1-r-${DOWN}-${RIGHT}`, this.tilesMap.newAnimation('bl1-r-r'));
-
-    this.blockAnimMap.set(`bl1-t-${UP}-${RIGHT}`, this.tilesMap.newAnimation('bl1-t-u'));
-    this.blockAnimMap.set(`bl1-t-${DOWN}-${LEFT}`, this.tilesMap.newAnimation('bl1-t-d'));
-    this.blockAnimMap.set(`bl1-t-${UP}-${LEFT}`, this.tilesMap.newAnimation('bl1-t-l'));
-    this.blockAnimMap.set(`bl1-t-${DOWN}-${RIGHT}`, this.tilesMap.newAnimation('bl1-t-r'));
+    blocksSpec.forEach(blockSpec => {
+      let blockAnim = this.tilesMap.newAnimation(blockSpec[1]);
+      blockAnim.addAnimationEndHandler(() => {
+        this.triggerOnRotateEndHandler();
+      });
+      this.blockAnimMap.set(blockSpec[0], blockAnim);
+    });
   }
 }
