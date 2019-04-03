@@ -58,6 +58,7 @@ export default class Level {
 
   _initializeLevelBlocks(levelSpec) {
     // Draw reference block into the level buffer.
+    this.refBlockName = levelSpec.refBlock;
     this.tilesMap.draw(levelSpec.refBlock, this.context, refBlockPos);
 
     // Draw level blocks into the level buffer.
@@ -66,7 +67,9 @@ export default class Level {
       line.forEach(blockName => {
         if(blockName) {
           let block = new Block(blockName, this.tilesMap, pos);
-          block.addRotateEndHandler(() => console.log("Rotation ended!"));
+          block.addRotateEndHandler((block) => {
+            this._checkBlock(block);
+          });
           this.blocksData.set(pos.y, pos.x, block);
           this.tilesMap.draw(blockName, this.context, pos);
         }
@@ -75,6 +78,11 @@ export default class Level {
       pos.x = blocksPos.x;
       pos.moveY(blocksDistance.y);
     });
-    console.log(this.blocksData);
+  }
+
+  _checkBlock(block) {
+    if(block.currentSpriteName === this.refBlockName) {
+      block.markAsCleared();
+    }
   }
 }

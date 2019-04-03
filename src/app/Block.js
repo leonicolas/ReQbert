@@ -6,11 +6,12 @@ import { Vec2 } from './libs/math';
 const blockSize = 3 * config.gridSize;
 
 export default class Block {
-  constructor(blockName, tilesMap, pos = new Vec2(0, 0)) {
-    this.blockName = blockName;
+  constructor(initialSpriteName, tilesMap, pos = new Vec2(0, 0)) {
+    this.currentSpriteName = initialSpriteName;
     this.tilesMap = tilesMap;
     this.pos = pos.clone();
     this.onRotateEndHandlers = new Set();
+    this.cleared = false;
     this._initializeAnimations();
   }
 
@@ -22,11 +23,17 @@ export default class Block {
     this.onRotateEndHandlers.forEach(handler => handler(this));
   }
 
+  markAsCleared() {
+    this.cleared = true;
+    this.currentBlock = this.tilesMap.newSprite("bl-cleared", this.pos);
+  }
+
   rotate(direction) {
-    this.blockAnim = this.blockAnimMap.get(`${this.blockName}-${direction.y}-${direction.x}`);
-    this.blockAnim.pos.set(this.pos.x, this.pos.y);
-    this.blockName = this.blockAnim.getLastFrameName();
-    this.blockAnim.start();
+    if(this.cleared) return;
+    this.currentBlock = this.blockAnimMap.get(`${this.currentSpriteName}-${direction.y}-${direction.x}`);
+    this.currentBlock.pos.set(this.pos.x, this.pos.y);
+    this.currentSpriteName = this.currentBlock.getLastFrameName();
+    this.currentBlock.start();
   }
 
   render(context, deltaTime) {
@@ -37,8 +44,8 @@ export default class Block {
       blockSize
     );
 
-    if(this.blockAnim) {
-      this.blockAnim.render(context, deltaTime);
+    if(this.currentBlock) {
+      this.currentBlock.render(context, deltaTime);
     }
   }
 
