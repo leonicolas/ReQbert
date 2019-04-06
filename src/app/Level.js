@@ -6,6 +6,7 @@ import config from './config';
 import Layer from './Layer';
 import Block from './Block';
 import Qbert from './entities/Qbert'
+import { Keys } from './Keyboard';
 
 const entitiesLayerPos = new Vec2(0.5, -1.4);
 
@@ -15,9 +16,8 @@ const blocksDistance = new Vec2(3, 2);
 
 export default class Level {
 
-  constructor(levelSpec, tilesMap, charactersMap) {
+  constructor(levelSpec, tilesMap, charactersMap, input) {
     // Initialize properties
-    this.levelSpec = levelSpec;
     this.tilesMap = tilesMap;
     this.blocksData = new Matrix();
     this.entitiesLayer = new Layer(entitiesLayerPos, config.screen);
@@ -26,8 +26,8 @@ export default class Level {
     this.qbert = new Qbert(charactersMap, new Vec2(15, 3));
     this.entitiesLayer.addSprite(this.qbert);
 
-    // Add jump event handler
-    this.qbert.jump.addStartHandler((behaviour, direction) => {
+    // Add jump event listener
+    this.qbert.jump.addStartListener((behaviors, direction) => {
       this.currentBlock = this.blocksData.get(this.qbert.pos.y, this.qbert.pos.x);
       this.currentBlock.rotate(direction);
     });
@@ -35,6 +35,7 @@ export default class Level {
     // Initialize level
     this._initializeBuffer();
     this._initializeLevelBlocks(levelSpec);
+    this._initializeInputListener(input);
   }
 
   update(deltaTime) {
@@ -77,6 +78,26 @@ export default class Level {
       });
       pos.x = blocksPos.x;
       pos.moveY(blocksDistance.y);
+    });
+  }
+
+  _initializeInputListener(input) {
+    input.addKeyListener(Keys.Space, (state) => console.log(`Space ${state ? 'pressed' : 'released'}!`));
+    input.addKeyListener(Keys.ArrowLeft, (state) => {
+      if(state && input.getKeyState(Keys.ArrowUp)) this.qbert.jump.leftUp();
+      if(state && input.getKeyState(Keys.ArrowDown)) this.qbert.jump.leftDown();
+    });
+    input.addKeyListener(Keys.ArrowRight, (state) => {
+      if(state && input.getKeyState(Keys.ArrowUp)) this.qbert.jump.rightUp();
+      if(state && input.getKeyState(Keys.ArrowDown)) this.qbert.jump.rightDown();
+    });
+    input.addKeyListener(Keys.ArrowUp, (state) => {
+      if(state && input.getKeyState(Keys.ArrowLeft)) this.qbert.jump.leftUp();
+      if(state && input.getKeyState(Keys.ArrowRight)) this.qbert.jump.rightUp();
+    });
+    input.addKeyListener(Keys.ArrowDown, (state) => {
+      if(state && input.getKeyState(Keys.ArrowLeft)) this.qbert.jump.leftDown();
+      if(state && input.getKeyState(Keys.ArrowRight)) this.qbert.jump.rightDown();
     });
   }
 

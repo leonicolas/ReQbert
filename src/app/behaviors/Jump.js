@@ -11,11 +11,12 @@ export default class Jump extends Behavior {
   constructor() {
     super('jump');
     this.speed = 250;
+    this.jumping = false;
     this.direction = new Vec2(LEFT, DOWN);
     this.ratio = new Vec2(3, 2);
     this.lastPos = this.direction.clone();
-    this.onStartHandlers = new Set();
-    this.onEndHandlers = new Set();
+    this.onStartListeners = new Set();
+    this.onEndListeners = new Set();
   }
 
   leftDown() {
@@ -54,20 +55,20 @@ export default class Jump extends Behavior {
     return this.jumping;
   }
 
-  addStartHandler(handler) {
-    this.onStartHandlers.add(handler);
+  addStartListener(handler) {
+    this.onStartListeners.add(handler);
   }
 
-  addEndHandler(handler) {
-    this.onEndHandlers.add(handler);
+  addEndListener(handler) {
+    this.onEndListeners.add(handler);
   }
 
-  triggerOnStartHandlers(direction) {
-    this.onStartHandlers.forEach(handler => handler(this, direction));
+  triggerOnStart(direction) {
+    this.onStartListeners.forEach(handler => handler(this, direction));
   }
 
-  triggerOnEndHandlers() {
-    this.onEndHandlers.forEach(handler => handler(this));
+  triggerOnEnd() {
+    this.onEndListeners.forEach(handler => handler(this));
   }
 
   update(entity, deltaTime) {
@@ -83,7 +84,7 @@ export default class Jump extends Behavior {
     this._moveEntity(entity);
 
     if(finished) {
-      this.triggerOnEndHandlers();
+      this.triggerOnEnd();
       this._normalizeEntityPos(entity);
       this.jumping = false;
     }
@@ -121,6 +122,6 @@ export default class Jump extends Behavior {
     this.maxAngle = 90;
     this.refAngle = directionY > 0 ? 0 : 90;
 
-    this.triggerOnStartHandlers(this.direction.clone());
+    this.triggerOnStart(this.direction.clone());
   }
 }

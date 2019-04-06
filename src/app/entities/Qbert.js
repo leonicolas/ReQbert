@@ -19,7 +19,7 @@ export default class Qbert extends Entity {
     this.sprite = this.sprites.idleFront;
     this.xDirection = LEFT;
 
-    this.addBehaviour(new Jump());
+    this.addBehavior(new Jump());
   }
 
   update(deltaTime) {

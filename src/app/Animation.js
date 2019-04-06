@@ -10,6 +10,7 @@ export default class Animation {
     this.frameTime = animationData.frameTime / 1000;
     this.framesCount = this.frames.length;
     this.pos = pos.clone();
+    this.hasTransformations = Array.isArray(this.frames[0]);
 
     this.onAnimationEndHandlers = new Set();
 
@@ -44,7 +45,7 @@ export default class Animation {
     this.onAnimationEndHandlers.add(handler);
   }
 
-  triggerOnAninmationEnd() {
+  triggerOnAnimationEnd() {
     this.onAnimationEndHandlers.forEach(handler => handler(this));
   }
 
@@ -55,13 +56,15 @@ export default class Animation {
     } else {
       if(!this.ended) {
         this.ended = true;
-        this.triggerOnAninmationEnd();
+        this.triggerOnAnimationEnd();
       }
     }
 
     if(!this.visible) return;
+
+    const frame = this.frames[this.frameIndex];
     context.drawImage(
-      this.frames[this.frameIndex][transformIndex],
+      this.hasTransformations ? frame[transformIndex] : frame,
       this.pos.x * config.gridSize,
       this.pos.y * config.gridSize
     );

@@ -21,9 +21,9 @@ export function loadBackgrounds(bgSpecName, tilesMap) {
     .then(bgSpec => new BackgroundMap(bgSpec, tilesMap));
 }
 
-export function loadStage(stageNumber, tilesMap, charactersMap) {
+export function loadStage(stageNumber, tilesMap, charactersMap, input) {
   return loadJson(`stages/stage-${stageNumber}.json`)
-    .then(stageSpec => new Stage(stageSpec, tilesMap, charactersMap));
+    .then(stageSpec => new Stage(stageSpec, tilesMap, charactersMap, input));
 }
 
 export function loadJson(fileName) {

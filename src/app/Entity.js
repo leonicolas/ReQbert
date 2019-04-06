@@ -7,7 +7,7 @@ export default class Entity {
     this.behaviors = [];
   }
 
-  addBehaviour(behavior) {
+  addBehavior(behavior) {
     this.behaviors.push(behavior);
     this[behavior.name] = behavior;
   }

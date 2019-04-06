@@ -2,22 +2,22 @@ import Level from "./Level";
 
 export default class Stage {
 
-  constructor(stageSpec, tilesMap, charactersMap) {
+  constructor(stageSpec, tilesMap, charactersMap, input) {
     this.stageSpec = stageSpec;
     this.tilesMap = tilesMap;
     this.charactersMap = charactersMap;
-
-    this._initializeLevels();
+    this.input = input;
+    this.currentLevel;
   }
 
-  _initializeLevels() {
-    Object.keys(this.stageSpec.levels).forEach(levelName => {
-      let levelSpec = this.stageSpec.levels[levelName];
-      this[levelName] = new Level(
-        levelSpec,
-        this.tilesMap,
-        this.charactersMap
-      );
-    });
+  getLevel(level) {
+    this.input.resetListeners();
+    this.currentLevel = new Level(
+      this.stageSpec.levels[level],
+      this.tilesMap,
+      this.charactersMap,
+      this.input
+    );
+    return this.currentLevel;
   }
 }
