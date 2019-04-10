@@ -25,7 +25,7 @@ export default class Layer {
   render(context, deltaTime) {
     this._clear();
     this._renderSprites(deltaTime);
-    context.drawImage(this.buffer, this.pos.x * config.gridSize, this.pos.y * config.gridSize);
+    context.drawImage(this.buffer, this.pos.x * config.grid.size, this.pos.y * config.grid.size);
   }
 
   _clear() {

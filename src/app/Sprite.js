@@ -12,20 +12,16 @@ export default class Sprite {
       this.images = castArray(spriteData);
     }
     this.pos = pos.clone();
-    this.transformIndex = 0;
   }
 
-  render(context, deltaTime, transformIndex = -1) {
-    if(transformIndex >= 0) {
-      this.transformIndex = transformIndex;
-    }
+  render(context, deltaTime, transformIndex = 0) {
     if(this.animation) {
-      this.animation.render(context, deltaTime, this.transformIndex);
+      this.animation.render(context, deltaTime);
     } else {
       context.drawImage(
-        this.images[this.transformIndex],
-        this.pos.x * config.gridSize,
-        this.pos.y * config.gridSize
+        this.images[transformIndex],
+        this.pos.x * config.grid.size,
+        this.pos.y * config.grid.size
       );
     }
   }

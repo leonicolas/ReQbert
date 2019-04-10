@@ -36,11 +36,10 @@ export default class SpriteMap {
   }
 
   draw(imageName, context, pos = new Vec2(0, 0), transformIndex = 0) {
-    const image = this.getImage(imageName);
     context.drawImage(
-      image[transformIndex],
-      pos.x * config.gridSize,
-      pos.y * config.gridSize
+      this.getImage(imageName)[transformIndex],
+      pos.x * config.grid.size,
+      pos.y * config.grid.size
     );
   }
 
@@ -58,8 +57,8 @@ export default class SpriteMap {
   _createSpriteBuffer(spriteSpec) {
     const pos = new Vec2(spriteSpec.position[0], spriteSpec.position[1]);
     const size = new Vec2(
-      spriteSpec.size[0] * config.gridSize,
-      spriteSpec.size[1] * config.gridSize
+      spriteSpec.size[0] * config.grid.size,
+      spriteSpec.size[1] * config.grid.size
     );
     const buffers = castArray(
       this._createTransformedBuffer(pos, size, spriteSpec.transformation)
@@ -72,8 +71,8 @@ export default class SpriteMap {
       case 'rotated':
         return this._createRotatedBuffer(pos, size);
 
-      case 'fliped':
-        return this._createFliped(pos, size);
+      case 'flipped':
+        return this._createFlipped(pos, size);
 
       default:
         return this._createBuffer(pos, size);
@@ -86,13 +85,13 @@ export default class SpriteMap {
     );
   }
 
-  _createFliped(pos, size) {
-    return [false, true].map(fliped =>
-      this._createBuffer(pos, size, { fliped })
+  _createFlipped(pos, size) {
+    return [false, true].map(flipped =>
+      this._createBuffer(pos, size, { flipped })
     );
   }
 
-  _createBuffer(pos, size, { rotation, fliped } = {}) {
+  _createBuffer(pos, size, { rotation, flipped } = {}) {
     const buffer = document.createElement('canvas');
     const isRotated = rotation === 90 || rotation === 270;
     const spriteSize = size.clone();
@@ -101,7 +100,7 @@ export default class SpriteMap {
     buffer.height = spriteSize.y;
 
     const context = buffer.getContext('2d');
-    if (fliped) {
+    if (flipped) {
       context.scale(-1, 1);
       context.translate(-spriteSize.x, 0);
     }

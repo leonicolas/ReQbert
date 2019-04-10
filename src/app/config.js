@@ -1,7 +1,11 @@
 export default {
   screen: {
     width: 512,
-    height: 384
+    height: 384,
   },
-  gridSize: 16
+  grid: {
+    lines: 364 / 16,
+    columns: 512 / 16,
+    size: 16,
+  }
 };

@@ -10,8 +10,7 @@ export default class Animation {
     this.frameTime = animationData.frameTime / 1000;
     this.framesCount = this.frames.length;
     this.pos = pos.clone();
-    this.hasTransformations = Array.isArray(this.frames[0]);
-
+    this.transformIndex = 0;
     this.onAnimationEndHandlers = new Set();
 
     this.start();
@@ -64,9 +63,9 @@ export default class Animation {
 
     const frame = this.frames[this.frameIndex];
     context.drawImage(
-      this.hasTransformations ? frame[transformIndex] : frame,
-      this.pos.x * config.gridSize,
-      this.pos.y * config.gridSize
+      frame[this.transformIndex],
+      this.pos.x * config.grid.size,
+      this.pos.y * config.grid.size
     );
   }
 }

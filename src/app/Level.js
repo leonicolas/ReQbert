@@ -27,9 +27,12 @@ export default class Level {
     this.entitiesLayer.addSprite(this.qbert);
 
     // Add jump event listener
-    this.qbert.jump.addStartListener((behaviors, direction) => {
-      this.currentBlock = this.blocksData.get(this.qbert.pos.y, this.qbert.pos.x);
+    this.qbert.jump.addStartListener(direction => {
+      this.currentBlock = this.blocksData.get(this.qbert.pos.x, this.qbert.pos.y);
       this.currentBlock.rotate(direction);
+    });
+    this.qbert.jump.addEndListener(() => {
+      this._checkLevelBoundary(this.qbert);
     });
 
     // Initialize level
@@ -66,19 +69,20 @@ export default class Level {
     let pos = blocksPos.clone();
     levelSpec.blocks.forEach(line => {
       line.forEach(blockName => {
-        if(blockName) {
-          let block = new Block(blockName, this.tilesMap, pos);
-          block.addRotateEndHandler((block) => {
-            this._checkBlock(block);
-          });
-          this.blocksData.set(pos.y, pos.x, block);
-          this.tilesMap.draw(blockName, this.context, pos);
-        }
+        if(blockName)
+          this._createBlock(blockName, pos);
         pos.moveX(blocksDistance.x);
       });
       pos.x = blocksPos.x;
       pos.moveY(blocksDistance.y);
     });
+  }
+
+  _createBlock(blockName, pos) {
+    let block = new Block(blockName, this.tilesMap, pos);
+    block.addRotateEndHandler((block) => this._checkBlock(block));
+    this.blocksData.set(pos.x, pos.y, block);
+    this.tilesMap.draw(blockName, this.context, pos);
   }
 
   _initializeInputListener(input) {
@@ -105,5 +109,15 @@ export default class Level {
     if(block.currentSpriteName === this.refBlockName) {
       block.markAsCleared();
     }
+  }
+
+  _checkLevelBoundary(entity) {
+    let block = this.blocksData.get(entity.pos.x, entity.pos.y);
+    if(block) return;
+
+    if(entity.jump) {
+      entity.jump.disable();
+    }
+    entity.basic.die();
   }
 }

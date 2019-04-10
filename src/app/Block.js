@@ -3,7 +3,7 @@ import config from './config';
 import { LEFT, RIGHT, UP, DOWN } from './behaviors/Jump';
 import { Vec2 } from './libs/math';
 
-const blockSize = 3 * config.gridSize;
+const blockSize = 3 * config.grid.size;
 
 export default class Block {
   constructor(initialSpriteName, tilesMap, pos = new Vec2(0, 0)) {
@@ -38,8 +38,8 @@ export default class Block {
 
   render(context, deltaTime) {
     context.clearRect(
-      this.pos.x * config.gridSize,
-      this.pos.y * config.gridSize,
+      this.pos.x * config.grid.size,
+      this.pos.y * config.grid.size,
       blockSize,
       blockSize
     );

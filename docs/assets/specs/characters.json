@@ -5,25 +5,25 @@
       "name": "qbert-front",
       "position": [0, 0],
       "size": [2, 2],
-      "transformation": "fliped"
+      "transformation": "flipped"
     },
     {
       "name": "qbert-front-jumping",
       "position": [32, 0],
       "size": [2, 2],
-      "transformation": "fliped"
+      "transformation": "flipped"
     },
     {
       "name": "qbert-back",
       "position": [64, 0],
       "size": [2, 2],
-      "transformation": "fliped"
+      "transformation": "flipped"
     },
     {
       "name": "qbert-back-jumping",
       "position": [96, 0],
       "size": [2, 2],
-      "transformation": "fliped"
+      "transformation": "flipped"
     }
   ]
 }
