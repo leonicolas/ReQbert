@@ -24,6 +24,34 @@
       "position": [96, 0],
       "size": [2, 2],
       "transformation": "flipped"
+    },
+    {
+      "name": "qbert-wining-1",
+      "position": [128, 0],
+      "size": [2, 2]
+    },
+    {
+      "name": "qbert-wining-2",
+      "position": [160, 0],
+      "size": [2, 2]
+    },
+    {
+      "name": "qbert-dying-1",
+      "position": [192, 0],
+      "size": [2, 2]
+    },
+    {
+      "name": "qbert-dying-2",
+      "position": [224, 0],
+      "size": [2, 2]
+    }
+  ],
+
+  "animations": [
+    {
+      "name": "qbert-dying",
+      "frameTime": 150,
+      "frames": ["qbert-dying-1", "qbert-dying-2"]
     }
   ]
 }
