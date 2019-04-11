@@ -10,18 +10,26 @@ export default class Jump extends Behavior {
 
   constructor() {
     super('jump');
-    this.enabled = true;
+    this.isEnabled = true;
     this.speed = 250;
-    this.jumping = false;
-    this.direction = new Vec2(LEFT, DOWN);
     this.ratio = new Vec2(3, 2);
-    this.lastPos = this.direction.clone();
     this.onStartListeners = new Set();
     this.onEndListeners = new Set();
+    this.reset();
   }
 
+  reset() {
+    this.jumping = false;
+    this.direction = new Vec2(LEFT, DOWN);
+    this.lastPos = this.direction.clone();
+  }
+
+  enable() {
+    this.isEnabled = true;
+  }
+;
   disable() {
-    this.enabled = false;
+    this.isEnabled = false;
   }
 
   leftDown() {
@@ -58,14 +66,6 @@ export default class Jump extends Behavior {
 
   isJumping() {
     return this.jumping;
-  }
-
-  addStartListener(handler) {
-    this.onStartListeners.add(handler);
-  }
-
-  addEndListener(handler) {
-    this.onEndListeners.add(handler);
   }
 
   triggerOnStart(direction) {
@@ -115,7 +115,7 @@ export default class Jump extends Behavior {
   }
 
   _start(directionX, directionY) {
-    if(this.isJumping() || !this.enabled) return;
+    if(this.isJumping() || !this.isEnabled) return;
 
     this.jumping = true;
     this.direction.set(directionX, directionY);

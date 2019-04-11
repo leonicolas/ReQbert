@@ -1,6 +1,7 @@
 {
   "levels": {
     "level1": {
+      "startPos": [0, 4],
       "refBlock": "bl1-r",
       "blocks": [
         [null   , null   , null   , null   , "bl1-f", null   , null   , null   , null   ],

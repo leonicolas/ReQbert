@@ -11,7 +11,7 @@ export default class Animation {
     this.framesCount = this.frames.length;
     this.pos = pos.clone();
     this.transformIndex = 0;
-    this.onAnimationEndHandlers = new Set();
+    this.onAnimationEndListeners = new Set();
 
     this.start();
   }
@@ -22,6 +22,11 @@ export default class Animation {
     this.frameIndex = 0;
     this.elapsedTime = 0;
     this.show();
+  }
+
+  stop() {
+    this.loop = false;
+    this.ended = true;
   }
 
   show() {
@@ -40,12 +45,8 @@ export default class Animation {
     return this.getFrameName(this.framesCount - 1);
   }
 
-  addAnimationEndHandler(handler) {
-    this.onAnimationEndHandlers.add(handler);
-  }
-
   triggerOnAnimationEnd() {
-    this.onAnimationEndHandlers.forEach(handler => handler(this));
+    this.onAnimationEndListeners.forEach(listener => listener(this));
   }
 
   render(context, deltaTime, transformIndex = 0) {

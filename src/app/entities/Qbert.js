@@ -1,6 +1,7 @@
 import Entity from '../Entity';
 import Jump from '../behaviors/Jump';
-import Basic from '../behaviors/Basic';
+import Born from '../behaviors/Born';
+import Death from '../behaviors/Death';
 
 const LEFT = 0;
 const RIGHT = 1;
@@ -22,17 +23,24 @@ export default class Qbert extends Entity {
     this.xDirection = LEFT;
 
     this.addBehavior(new Jump());
-    this.addBehavior(new Basic());
+    this.addBehavior(new Born());
+    this.addBehavior(new Death());
 
-    this.basic.addDyingListener(() => {
+    this.death.onStartListeners.add(() => {
       this.sprites.dying.start(true);
       this._setCurrentSprite('dying');
+    })
+
+    this.death.onEndListeners.add(() => {
+      this.sprites.dying.stop();
+      this.jump.reset();
+      this._setCurrentSprite('idle-front');
     })
   }
 
   update(deltaTime) {
     super.update(deltaTime);
-    if(!this.basic.isDying) {
+    if(!this.death.isDying) {
       this._updateSprite();
     }
     this.sprite.pos.set(this.pos.x, this.pos.y);

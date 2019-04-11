@@ -70,7 +70,7 @@ export default class Block {
     this.blockAnimMap = new Map();
     blocksSpec.forEach(blockSpec => {
       let blockAnim = this.tilesMap.newAnimation(blockSpec[1]);
-      blockAnim.addAnimationEndHandler(() => {
+      blockAnim.onAnimationEndListeners.add(() => {
         this.triggerOnRotateEndHandler();
       });
       this.blockAnimMap.set(blockSpec[0], blockAnim);

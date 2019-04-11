@@ -26,19 +26,11 @@ export default class Level {
     this.qbert = new Qbert(charactersMap, new Vec2(15, 3));
     this.entitiesLayer.addSprite(this.qbert);
 
-    // Add jump event listener
-    this.qbert.jump.addStartListener(direction => {
-      this.currentBlock = this.blocksData.get(this.qbert.pos.x, this.qbert.pos.y);
-      this.currentBlock.rotate(direction);
-    });
-    this.qbert.jump.addEndListener(() => {
-      this._checkLevelBoundary(this.qbert);
-    });
-
     // Initialize level
     this._initializeBuffer();
     this._initializeLevelBlocks(levelSpec);
-    this._initializeInputListener(input);
+    this._initializeInputListeners(input);
+    this._initializeQbertListeners();
   }
 
   update(deltaTime) {
@@ -78,6 +70,22 @@ export default class Level {
     });
   }
 
+  _initializeQbertListeners() {
+    this.qbert.jump.onStartListeners.add(direction => {
+      this.currentBlock = this.blocksData.get(this.qbert.pos.x, this.qbert.pos.y);
+      this.currentBlock.rotate(direction);
+    });
+    this.qbert.jump.onEndListeners.add(() => {
+      this._checkLevelBoundary(this.qbert);
+    });
+    this.qbert.death.onEndListeners.add(() => {
+      setTimeout(() => this.qbert.born.start(new Vec2(15, 3)), 500);
+    });
+    this.qbert.born.onEndListeners.add(() => {
+      this.qbert.jump.enable();
+    });
+  }
+
   _createBlock(blockName, pos) {
     let block = new Block(blockName, this.tilesMap, pos);
     block.addRotateEndHandler((block) => this._checkBlock(block));
@@ -85,7 +93,7 @@ export default class Level {
     this.tilesMap.draw(blockName, this.context, pos);
   }
 
-  _initializeInputListener(input) {
+  _initializeInputListeners(input) {
     input.addKeyListener(Keys.Space, (state) => console.log(`Space ${state ? 'pressed' : 'released'}!`));
     input.addKeyListener(Keys.ArrowLeft, (state) => {
       if(state && input.getKeyState(Keys.ArrowUp)) this.qbert.jump.leftUp();
@@ -118,6 +126,6 @@ export default class Level {
     if(entity.jump) {
       entity.jump.disable();
     }
-    entity.basic.die();
+    entity.death.start();
   }
 }

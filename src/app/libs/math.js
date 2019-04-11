@@ -17,7 +17,15 @@ export class Vec2 {
   }
 
   set(x, y) {
+    this.setX(x);
+    this.setY(y);
+  }
+
+  setX(x) {
     this.x = x;
+  }
+
+  setY(y) {
     this.y = y;
   }
 
