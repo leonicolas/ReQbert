@@ -1,12 +1,10 @@
 import { Vec2, Matrix } from './libs/math';
-import { LEFT, RIGHT, UP, DOWN } from './behaviors/Jump';
-
 import config from './config';
+import { jumpWithKeys } from './libs/bind';
 
 import Layer from './Layer';
 import Block from './Block';
-import Qbert from './entities/Qbert'
-import { Keys } from './Keyboard';
+import Qbert from './entities/Qbert';
 
 const entitiesLayerPos = new Vec2(0.5, -1.4);
 
@@ -29,8 +27,9 @@ export default class Level {
     // Initialize level
     this._initializeBuffer();
     this._initializeLevelBlocks(levelSpec);
-    this._initializeInputListeners(input);
     this._initializeQbertListeners();
+
+    jumpWithKeys(input, this.qbert);
   }
 
   update(deltaTime) {
@@ -91,26 +90,6 @@ export default class Level {
     block.addRotateEndHandler((block) => this._checkBlock(block));
     this.blocksData.set(pos.x, pos.y, block);
     this.tilesMap.draw(blockName, this.context, pos);
-  }
-
-  _initializeInputListeners(input) {
-    input.addKeyListener(Keys.Space, (state) => console.log(`Space ${state ? 'pressed' : 'released'}!`));
-    input.addKeyListener(Keys.ArrowLeft, (state) => {
-      if(state && input.getKeyState(Keys.ArrowUp)) this.qbert.jump.leftUp();
-      if(state && input.getKeyState(Keys.ArrowDown)) this.qbert.jump.leftDown();
-    });
-    input.addKeyListener(Keys.ArrowRight, (state) => {
-      if(state && input.getKeyState(Keys.ArrowUp)) this.qbert.jump.rightUp();
-      if(state && input.getKeyState(Keys.ArrowDown)) this.qbert.jump.rightDown();
-    });
-    input.addKeyListener(Keys.ArrowUp, (state) => {
-      if(state && input.getKeyState(Keys.ArrowLeft)) this.qbert.jump.leftUp();
-      if(state && input.getKeyState(Keys.ArrowRight)) this.qbert.jump.rightUp();
-    });
-    input.addKeyListener(Keys.ArrowDown, (state) => {
-      if(state && input.getKeyState(Keys.ArrowLeft)) this.qbert.jump.leftDown();
-      if(state && input.getKeyState(Keys.ArrowRight)) this.qbert.jump.rightDown();
-    });
   }
 
   _checkBlock(block) {
