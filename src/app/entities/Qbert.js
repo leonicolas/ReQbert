@@ -1,6 +1,6 @@
 import Entity from '../Entity';
 import Jump from '../behaviors/Jump';
-import Born from '../behaviors/Born';
+import Spawn from '../behaviors/Spawn';
 import Death from '../behaviors/Death';
 
 const LEFT = 0;
@@ -23,7 +23,7 @@ export default class Qbert extends Entity {
     this.xDirection = LEFT;
 
     this.addBehavior(new Jump());
-    this.addBehavior(new Born());
+    this.addBehavior(new Spawn());
     this.addBehavior(new Death());
 
     this.death.onStartListeners.add(() => {

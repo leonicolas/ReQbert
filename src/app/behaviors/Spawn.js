@@ -1,10 +1,10 @@
 import Behavior from '../Behavior';
 import config from '../config';
 
-export default class Born extends Behavior {
+export default class Spawn extends Behavior {
 
   constructor() {
-    super('born');
+    super('spawn');
     this.reset();
     this.speed = 5;
     this.onStartListeners = new Set();
@@ -14,7 +14,7 @@ export default class Born extends Behavior {
   start(finalPos) {
     if(this.isActive()) return;
     this.reset();
-    this.isBeingBorn = true;
+    this.isSpawning = true;
     this.position = finalPos.clone();
     this.position.y = -2;
     this.finalPos = finalPos;
@@ -22,18 +22,18 @@ export default class Born extends Behavior {
   }
 
   isActive() {
-    return this.isBeingBorn;
+    return this.isSpawning;
   }
 
   update(entity, deltaTime) {
-    this._checkIfBeingBorn(entity);
-    if(this.isBeingBorn) {
+    this._checkIfFinished(entity);
+    if(this.isSpawning) {
       this._move(entity, deltaTime);
     }
   }
 
   reset() {
-    this.isBeingBorn = false;
+    this.isSpawning = false;
   }
 
   _move(entity, deltaTime) {
@@ -41,12 +41,12 @@ export default class Born extends Behavior {
     entity.pos.set(this.position.x, this.position.y);
   }
 
-  _checkIfBeingBorn(entity) {
-    if(!this.isBeingBorn) return;
+  _checkIfFinished(entity) {
+    if(!this.isSpawning) return;
     if(entity.pos.y >= this.finalPos.y &&
        entity.pos.y < config.grid.lines) {
       entity.pos.set(this.finalPos.x, this.finalPos.y);
-      this.isBeingBorn = false;
+      this.isSpawning = false;
       this.onEndListeners.forEach(listener => listener());
     }
   }

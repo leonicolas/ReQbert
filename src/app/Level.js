@@ -78,9 +78,9 @@ export default class Level {
       this._checkLevelBoundary(this.qbert);
     });
     this.qbert.death.onEndListeners.add(() => {
-      setTimeout(() => this.qbert.born.start(new Vec2(15, 3)), 500);
+      setTimeout(() => this.qbert.spawn.start(new Vec2(15, 3)), 500);
     });
-    this.qbert.born.onEndListeners.add(() => {
+    this.qbert.spawn.onEndListeners.add(() => {
       this.qbert.jump.enable();
     });
   }
