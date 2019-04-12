@@ -2,13 +2,37 @@
 <html lang="en">
 
 <head>
-    <title>ReQbert</title>
+  <title>ReQbert :: An MSX Qbert Remake ;)</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <style>
+    body {
+      color: #333;
+      font-family: 'Roboto', sans-serif;
+      background: url(assets/imgs/msx.svg);
+      background-size: 200px;
+    }
+    article {
+      padding: 0 10px;
+    }
+    .container {
+      margin: 0 auto;
+      width: 512px;
+      padding: 15px 15px 8px 15px;;
+      background-color: #fff;
+      border: solid 1px #444;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
     <canvas id="game" width="512" height="384"></canvas>
-    <p>Game under development!</p>
-    <p>Use the arrow keys to move the Qbert.</p>
+    <article>
+      <p>Game under development!</p>
+      <p>Use the arrow keys in the diagonal direction to move the Qbert.</p>
+      <p>Developed by Leonardo Nicolas.</p>
+      <p>Source: <a href="https://github.com/leonicolas/ReQbert">https://github.com/leonicolas/ReQbert</a></p>
+    </article>
+  </div>
 <script type="text/javascript" src="assets/js/main.js"></script></body>
 
 </html>
