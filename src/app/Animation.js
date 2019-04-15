@@ -13,11 +13,15 @@ export default class Animation {
     this.transformIndex = 0;
     this.onAnimationEndListeners = new Set();
 
-    this.start();
+    this.play();
   }
 
-  start(loop = false) {
-    this.loop = loop;
+  playInLoop() {
+    this.play(-1)
+  }
+
+  play(times = 1) {
+    this.playTimes = times;
     this.ended = false;
     this.frameIndex = 0;
     this.elapsedTime = 0;
@@ -25,7 +29,6 @@ export default class Animation {
   }
 
   stop() {
-    this.loop = false;
     this.ended = true;
   }
 
@@ -49,15 +52,23 @@ export default class Animation {
     this.onAnimationEndListeners.forEach(listener => listener(this));
   }
 
-  render(context, deltaTime, transformIndex = 0) {
-    if(this.loop || this.frameIndex + 1 < this.framesCount) {
-      this.frameIndex = Math.floor(this.elapsedTime / this.frameTime) % this.framesCount;
+  render(context, deltaTime) {
+    let hasFinished = this.frameIndex >= this.framesCount - 1;
+    // Count the number of times the animation was played.
+    if(this.playTimes > 1 && hasFinished) {
+      console.log('reseting');
+      this.play(--this.playTimes);
+      hasFinished = false;
+    }
+
+    // Render the animation frame.
+    if(this.playTimes < 0 || !hasFinished) {
+      this.frameIndex = Math.round(this.elapsedTime / this.frameTime) % this.framesCount;
+      console.log(this.framesNames[0], this.elapsedTime / this.frameTime / this.framesCount, this.elapsedTime, this.frameIndex)
       this.elapsedTime += deltaTime;
-    } else {
-      if(!this.ended) {
-        this.ended = true;
-        this.triggerOnAnimationEnd();
-      }
+    } else if(!this.ended) {
+      this.ended = true;
+      this.triggerOnAnimationEnd();
     }
 
     if(!this.visible) return;

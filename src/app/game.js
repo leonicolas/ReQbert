@@ -7,6 +7,7 @@ import config from './config';
 import Keyboard from './Keyboard';
 
 async function main(canvas) {
+  canvas.focus();
   const context = canvas.getContext('2d');
 
   // Input

@@ -17,6 +17,7 @@ export default class Qbert extends Entity {
       'jumping-front': this.spriteMap.newSprite('qbert-front-jumping'),
       'jumping-back': this.spriteMap.newSprite('qbert-back-jumping'),
       'dying': this.spriteMap.newAnimation('qbert-dying'),
+      'wining': this.spriteMap.newAnimation('qbert-wining'),
     };
 
     //this.sprite = this.sprites.idleFront;
@@ -27,7 +28,7 @@ export default class Qbert extends Entity {
     this.addBehavior(new Death());
 
     this.death.onStartListeners.add(() => {
-      this.sprites.dying.start(true);
+      this.sprites.dying.playInLoop();
       this._setCurrentSprite('dying');
     })
 
@@ -38,9 +39,15 @@ export default class Qbert extends Entity {
     })
   }
 
+  win() {
+    this.sprites.wining.play(3);
+    this.isWining = true;
+    this._setCurrentSprite('wining');
+  }
+
   update(deltaTime) {
     super.update(deltaTime);
-    if(!this.death.isDying) {
+    if(!this.death.isDying && !this.isWining) {
       this._updateSprite();
     }
     this.sprite.pos.set(this.pos.x, this.pos.y);

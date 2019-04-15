@@ -4,8 +4,18 @@ export default {
     height: 384,
   },
   grid: {
-    lines: 364 / 16,
-    columns: 512 / 16,
+    lines: parseInt(364 / 16),
+    columns: parseInt(512 / 16),
     size: 16,
+  },
+  block: {
+    startPosition: {
+      x: 3,
+      y: 3
+    },
+    distance: {
+      line: 2,
+      column: 3
+    }
   }
 };

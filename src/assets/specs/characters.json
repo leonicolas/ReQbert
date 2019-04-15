@@ -52,6 +52,11 @@
       "name": "qbert-dying",
       "frameTime": 150,
       "frames": ["qbert-dying-1", "qbert-dying-2"]
+    },
+    {
+      "name": "qbert-wining",
+      "frameTime": 800,
+      "frames": ["qbert-wining-1", "qbert-wining-2"]
     }
   ]
 }

@@ -25,15 +25,15 @@ export default class Block {
 
   markAsCleared() {
     this.cleared = true;
-    this.currentBlock = this.tilesMap.newSprite("bl-cleared", this.pos);
+    this.currentBlockAnim = this.tilesMap.newSprite("bl-cleared", this.pos);
   }
 
   rotate(direction) {
     if(this.cleared) return;
-    this.currentBlock = this.blockAnimMap.get(`${this.currentSpriteName}-${direction.y}-${direction.x}`);
-    this.currentBlock.pos.set(this.pos.x, this.pos.y);
-    this.currentSpriteName = this.currentBlock.getLastFrameName();
-    this.currentBlock.start();
+    this.currentBlockAnim = this.blockAnimMap.get(`${this.currentSpriteName}-${direction.y}-${direction.x}`);
+    this.currentBlockAnim.pos.set(this.pos.x, this.pos.y);
+    this.currentSpriteName = this.currentBlockAnim.getLastFrameName();
+    this.currentBlockAnim.play();
   }
 
   render(context, deltaTime) {
@@ -44,8 +44,8 @@ export default class Block {
       blockSize
     );
 
-    if(this.currentBlock) {
-      this.currentBlock.render(context, deltaTime);
+    if(this.currentBlockAnim) {
+      this.currentBlockAnim.render(context, deltaTime);
     }
   }
 

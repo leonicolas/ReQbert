@@ -1,6 +1,7 @@
-import { Vec2, Matrix } from './libs/math';
 import config from './config';
+import { Vec2, Matrix } from './libs/math';
 import { jumpWithKeys } from './libs/bind';
+import { isLevelCleared } from './libs/level';
 
 import Layer from './Layer';
 import Block from './Block';
@@ -9,8 +10,10 @@ import Qbert from './entities/Qbert';
 const entitiesLayerPos = new Vec2(0.5, -1.4);
 
 const refBlockPos = new Vec2(3, 3);
-const blocksPos = new Vec2(3, 3);
-const blocksDistance = new Vec2(3, 2);
+const blocksPos = new Vec2(
+  config.block.startPosition.x,
+  config.block.startPosition.y
+);
 
 export default class Level {
 
@@ -19,6 +22,7 @@ export default class Level {
     this.tilesMap = tilesMap;
     this.blocksData = new Matrix();
     this.entitiesLayer = new Layer(entitiesLayerPos, config.screen);
+    this.levelClearedListeners = new Set();
 
     // Create entities
     this.qbert = new Qbert(charactersMap, new Vec2(15, 3));
@@ -27,8 +31,10 @@ export default class Level {
     // Initialize level
     this._initializeBuffer();
     this._initializeLevelBlocks(levelSpec);
+    this._initializeLevelListeners();
     this._initializeQbertListeners();
 
+    // Bind keys.
     jumpWithKeys(input, this.qbert);
   }
 
@@ -60,18 +66,26 @@ export default class Level {
     let pos = blocksPos.clone();
     levelSpec.blocks.forEach(line => {
       line.forEach(blockName => {
-        if(blockName)
+        if(blockName) {
           this._createBlock(blockName, pos);
-        pos.moveX(blocksDistance.x);
+        }
+        pos.moveX(config.block.distance.column);
       });
       pos.x = blocksPos.x;
-      pos.moveY(blocksDistance.y);
+      pos.moveY(config.block.distance.line);
+    });
+  }
+
+  _initializeLevelListeners() {
+    this.levelClearedListeners.add(() => {
+      this.qbert.jump.disable();
+      this.qbert.win();
     });
   }
 
   _initializeQbertListeners() {
     this.qbert.jump.onStartListeners.add(direction => {
-      this.currentBlock = this.blocksData.get(this.qbert.pos.x, this.qbert.pos.y);
+      this.currentBlock = this.blocksData.get(this.qbert.pos.y, this.qbert.pos.x);
       this.currentBlock.rotate(direction);
     });
     this.qbert.jump.onEndListeners.add(() => {
@@ -88,18 +102,21 @@ export default class Level {
   _createBlock(blockName, pos) {
     let block = new Block(blockName, this.tilesMap, pos);
     block.addRotateEndHandler((block) => this._checkBlock(block));
-    this.blocksData.set(pos.x, pos.y, block);
+    this.blocksData.set(pos.y, pos.x, block);
     this.tilesMap.draw(blockName, this.context, pos);
   }
 
   _checkBlock(block) {
     if(block.currentSpriteName === this.refBlockName) {
       block.markAsCleared();
+      if(isLevelCleared(this.blocksData, block)) {
+        this.levelClearedListeners.forEach(listener => listener());
+      };
     }
   }
 
   _checkLevelBoundary(entity) {
-    let block = this.blocksData.get(entity.pos.x, entity.pos.y);
+    let block = this.blocksData.get(entity.pos.y, entity.pos.x);
     if(block) return;
 
     if(entity.jump) {
