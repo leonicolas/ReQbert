@@ -1,14 +1,12 @@
 import Behavior from '../Behavior';
 import config from '../config';
 
-export default class Basic extends Behavior {
+export default class Die extends Behavior {
 
   constructor() {
-    super('death');
+    super('die');
     this.reset();
     this.speed = 12;
-    this.onStartListeners = new Set();
-    this.onEndListeners = new Set();
   }
 
   start() {
@@ -16,7 +14,7 @@ export default class Basic extends Behavior {
     this.reset();
     this.isDying = true;
     this.position = undefined;
-    this.onStartListeners.forEach(listener => listener());
+    this.triggerOnStart();
   }
 
   isActive() {
@@ -46,7 +44,7 @@ export default class Basic extends Behavior {
     }
     if(entity.pos.y >= config.grid.lines + 2) {
       this.isDying = false;
-      this.onEndListeners.forEach(listener => listener());
+      this.triggerOnEnd();
     }
   }
 }

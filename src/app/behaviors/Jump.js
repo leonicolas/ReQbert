@@ -13,8 +13,6 @@ export default class Jump extends Behavior {
     this.isEnabled = true;
     this.speed = 250;
     this.ratio = new Vec2(3, 2);
-    this.onStartListeners = new Set();
-    this.onEndListeners = new Set();
     this.reset();
   }
 
@@ -66,14 +64,6 @@ export default class Jump extends Behavior {
 
   isJumping() {
     return this.jumping;
-  }
-
-  triggerOnStart(direction) {
-    this.onStartListeners.forEach(handler => handler(direction));
-  }
-
-  triggerOnEnd() {
-    this.onEndListeners.forEach(handler => handler());
   }
 
   update(entity, deltaTime) {

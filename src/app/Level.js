@@ -79,7 +79,7 @@ export default class Level {
   _initializeLevelListeners() {
     this.levelClearedListeners.add(() => {
       this.qbert.jump.disable();
-      this.qbert.win();
+      this.qbert.win.start(3);
     });
   }
 
@@ -91,7 +91,7 @@ export default class Level {
     this.qbert.jump.onEndListeners.add(() => {
       this._checkLevelBoundary(this.qbert);
     });
-    this.qbert.death.onEndListeners.add(() => {
+    this.qbert.die.onEndListeners.add(() => {
       setTimeout(() => this.qbert.spawn.start(new Vec2(15, 3)), 500);
     });
     this.qbert.spawn.onEndListeners.add(() => {
@@ -122,6 +122,6 @@ export default class Level {
     if(entity.jump) {
       entity.jump.disable();
     }
-    entity.death.start();
+    entity.die.start();
   }
 }

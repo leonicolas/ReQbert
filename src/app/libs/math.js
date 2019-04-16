@@ -2,6 +2,12 @@ export function degToRad(deg) {
   return deg * Math.PI / 180;
 }
 
+export function toFixed(number, decimals) {
+  let factor = Math.pow(10, decimals);
+  let signal = number >= 0 ? 1 : -1;
+  return Math.round((number * factor) + (signal * 0.0001)) / factor;
+}
+
 export class Vec2 {
   constructor(x, y) {
     this.x = x;

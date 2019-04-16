@@ -7,8 +7,6 @@ export default class Spawn extends Behavior {
     super('spawn');
     this.reset();
     this.speed = 5;
-    this.onStartListeners = new Set();
-    this.onEndListeners = new Set();
   }
 
   start(finalPos) {
@@ -18,7 +16,7 @@ export default class Spawn extends Behavior {
     this.position = finalPos.clone();
     this.position.y = -2;
     this.finalPos = finalPos;
-    this.onStartListeners.forEach(listener => listener());
+    this.triggerOnStart();
   }
 
   isActive() {
@@ -47,7 +45,7 @@ export default class Spawn extends Behavior {
        entity.pos.y < config.grid.lines) {
       entity.pos.set(this.finalPos.x, this.finalPos.y);
       this.isSpawning = false;
-      this.onEndListeners.forEach(listener => listener());
+      this.triggerOnEnd();
     }
   }
 }

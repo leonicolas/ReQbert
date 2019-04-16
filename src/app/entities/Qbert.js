@@ -1,7 +1,8 @@
 import Entity from '../Entity';
 import Jump from '../behaviors/Jump';
 import Spawn from '../behaviors/Spawn';
-import Death from '../behaviors/Death';
+import Die from '../behaviors/Die';
+import Win from '../behaviors/Win';
 
 const LEFT = 0;
 const RIGHT = 1;
@@ -17,7 +18,8 @@ export default class Qbert extends Entity {
       'jumping-front': this.spriteMap.newSprite('qbert-front-jumping'),
       'jumping-back': this.spriteMap.newSprite('qbert-back-jumping'),
       'dying': this.spriteMap.newAnimation('qbert-dying'),
-      'wining': this.spriteMap.newAnimation('qbert-wining'),
+      'wining': this.spriteMap.newSprite('qbert-wining'),
+      'wining-jump': this.spriteMap.newSprite('qbert-wining-jump'),
     };
 
     //this.sprite = this.sprites.idleFront;
@@ -25,14 +27,15 @@ export default class Qbert extends Entity {
 
     this.addBehavior(new Jump());
     this.addBehavior(new Spawn());
-    this.addBehavior(new Death());
+    this.addBehavior(new Die());
+    this.addBehavior(new Win());
 
-    this.death.onStartListeners.add(() => {
+    this.die.onStartListeners.add(() => {
       this.sprites.dying.playInLoop();
       this._setCurrentSprite('dying');
     })
 
-    this.death.onEndListeners.add(() => {
+    this.die.onEndListeners.add(() => {
       this.sprites.dying.stop();
       this.jump.reset();
       this._setCurrentSprite('idle-front');
@@ -40,14 +43,14 @@ export default class Qbert extends Entity {
   }
 
   win() {
-    this.sprites.wining.play(3);
+    this.sprites.wining.play(true);
     this.isWining = true;
     this._setCurrentSprite('wining');
   }
 
   update(deltaTime) {
     super.update(deltaTime);
-    if(!this.death.isDying && !this.isWining) {
+    if(!this.die.isDying && !this.isWining) {
       this._updateSprite();
     }
     this.sprite.pos.set(this.pos.x, this.pos.y);

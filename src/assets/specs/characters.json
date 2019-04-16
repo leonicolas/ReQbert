@@ -26,12 +26,12 @@
       "transformation": "flipped"
     },
     {
-      "name": "qbert-wining-1",
+      "name": "qbert-wining",
       "position": [128, 0],
       "size": [2, 2]
     },
     {
-      "name": "qbert-wining-2",
+      "name": "qbert-wining-jump",
       "position": [160, 0],
       "size": [2, 2]
     },
@@ -52,11 +52,6 @@
       "name": "qbert-dying",
       "frameTime": 150,
       "frames": ["qbert-dying-1", "qbert-dying-2"]
-    },
-    {
-      "name": "qbert-wining",
-      "frameTime": 800,
-      "frames": ["qbert-wining-1", "qbert-wining-2"]
     }
   ]
 }

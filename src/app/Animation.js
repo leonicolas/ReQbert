@@ -12,16 +12,14 @@ export default class Animation {
     this.pos = pos.clone();
     this.transformIndex = 0;
     this.onAnimationEndListeners = new Set();
-
-    this.play();
   }
 
   playInLoop() {
-    this.play(-1)
+    this.play(true);
   }
 
-  play(times = 1) {
-    this.playTimes = times;
+  play(loop = false) {
+    this.loop = loop;
     this.ended = false;
     this.frameIndex = 0;
     this.elapsedTime = 0;
@@ -29,6 +27,7 @@ export default class Animation {
   }
 
   stop() {
+    this.loop = false;
     this.ended = true;
   }
 
@@ -53,18 +52,8 @@ export default class Animation {
   }
 
   render(context, deltaTime) {
-    let hasFinished = this.frameIndex >= this.framesCount - 1;
-    // Count the number of times the animation was played.
-    if(this.playTimes > 1 && hasFinished) {
-      console.log('reseting');
-      this.play(--this.playTimes);
-      hasFinished = false;
-    }
-
-    // Render the animation frame.
-    if(this.playTimes < 0 || !hasFinished) {
-      this.frameIndex = Math.round(this.elapsedTime / this.frameTime) % this.framesCount;
-      console.log(this.framesNames[0], this.elapsedTime / this.frameTime / this.framesCount, this.elapsedTime, this.frameIndex)
+    if(this.loop || this.frameIndex + 1 < this.framesCount) {
+      this.frameIndex = Math.floor(this.elapsedTime / this.frameTime) % this.framesCount;
       this.elapsedTime += deltaTime;
     } else if(!this.ended) {
       this.ended = true;
