@@ -42,7 +42,7 @@ function isDirectionCleared(blocksData, blocks, direction) {
       return block;
     });
   }
-  return clearedCount >= 1;
+  return clearedCount >= 5;
 }
 
 function invertDirection(direction) {

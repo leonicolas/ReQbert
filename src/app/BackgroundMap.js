@@ -12,23 +12,23 @@ export default class BackgroundMap {
   constructor(backgroundsSpec, tilesMap) {
     this.size = new Vec2(config.screen.width, config.screen.height);
     this.backgroundImages = new Map();
-    this.backgroundAnimations = new Map();
+    this.animationsData = new Map();
     backgroundsSpec.backgrounds.forEach(bgSpec => this._createBackground(bgSpec, tilesMap));
-    backgroundsSpec.animations.forEach(animSpec => this._createAnimation(animSpec));
+    backgroundsSpec.animations.forEach(animSpec => this._createAnimationData(animSpec));
   }
 
   get(bgName) {
     return new Background(this.backgroundImages.get(bgName));
   }
 
-  getAnimation(animName) {
-    const animationData = this.backgroundAnimations.get(animName);
+  getNewAnimation(animName) {
+    const animationData = this.animationsData.get(animName);
     return new Animation(animationData);
   }
 
-  _createAnimation(animSpec) {
+  _createAnimationData(animSpec) {
     const frames = animSpec.frames.map(bgName => this.backgroundImages.get(bgName));
-    this.backgroundAnimations.set(animSpec.name, {
+    this.animationsData.set(animSpec.name, {
       frames,
       frameTime: animSpec.frameTime
     });

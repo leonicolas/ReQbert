@@ -23,6 +23,7 @@ export default class Level {
     this.blocksData = new Matrix();
     this.entitiesLayer = new Layer(entitiesLayerPos, config.screen);
     this.levelClearedListeners = new Set();
+    this.cleared = false;
 
     // Create entities
     this.qbert = new Qbert(charactersMap, new Vec2(15, 3));
@@ -31,11 +32,13 @@ export default class Level {
     // Initialize level
     this._initializeBuffer();
     this._initializeLevelBlocks(levelSpec);
-    this._initializeLevelListeners();
     this._initializeQbertListeners();
 
-    // Bind keys.
+    // Bind keys
     jumpWithKeys(input, this.qbert);
+
+    // Events listeners
+    this.onLevelClearedListeners = new Set();
   }
 
   update(deltaTime) {
@@ -48,6 +51,10 @@ export default class Level {
     }
     context.drawImage(this.buffer, 0, 0);
     this.entitiesLayer.render(context, deltaTime);
+  }
+
+  triggerOnLevelCleared() {
+    this.onLevelClearedListeners.forEach(listener => listener());
   }
 
   _initializeBuffer() {
@@ -76,24 +83,25 @@ export default class Level {
     });
   }
 
-  _initializeLevelListeners() {
-    this.levelClearedListeners.add(() => {
-      this.qbert.jump.disable();
-      this.qbert.win.start(3);
-    });
-  }
-
   _initializeQbertListeners() {
+    // Jump listeners
     this.qbert.jump.onStartListeners.add(direction => {
       this.currentBlock = this.blocksData.get(this.qbert.pos.y, this.qbert.pos.x);
       this.currentBlock.rotate(direction);
     });
     this.qbert.jump.onEndListeners.add(() => {
-      this._checkLevelBoundary(this.qbert);
+      if(this.cleared) {
+        this.qbert.win.start(3);
+        this.triggerOnLevelCleared();
+      } else if(this._isOutOfBoundaries(this.qbert)) {
+        this.qbert.die.start();
+      }
     });
+    // Die process listener
     this.qbert.die.onEndListeners.add(() => {
       setTimeout(() => this.qbert.spawn.start(new Vec2(15, 3)), 500);
     });
+    // Spawn process
     this.qbert.spawn.onEndListeners.add(() => {
       this.qbert.jump.enable();
     });
@@ -110,18 +118,14 @@ export default class Level {
     if(block.currentSpriteName === this.refBlockName) {
       block.markAsCleared();
       if(isLevelCleared(this.blocksData, block)) {
+        this.cleared = true;
         this.levelClearedListeners.forEach(listener => listener());
       };
     }
   }
 
-  _checkLevelBoundary(entity) {
+  _isOutOfBoundaries(entity) {
     let block = this.blocksData.get(entity.pos.y, entity.pos.x);
-    if(block) return;
-
-    if(entity.jump) {
-      entity.jump.disable();
-    }
-    entity.die.start();
+    return block ? false : true;
   }
 }

@@ -18,6 +18,8 @@ export default class Sprite {
     if(this.animation) {
       this.animation.render(context, deltaTime);
     } else {
+      if(transformIndex >= this.images.length)
+        transformIndex = 0;
       context.drawImage(
         this.images[transformIndex],
         this.pos.x * config.grid.size,

@@ -24,6 +24,8 @@ export default class Die extends Behavior {
   update(entity, deltaTime) {
     this._checkIfDying(entity);
     if(this.isDying) {
+      if(entity.jump && entity.jump.isEnabled)
+        entity.jump.disable();
       this._move(entity, deltaTime);
     }
   }

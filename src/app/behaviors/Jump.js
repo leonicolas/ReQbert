@@ -17,7 +17,7 @@ export default class Jump extends Behavior {
   }
 
   reset() {
-    this.jumping = false;
+    this.isJumping = false;
     this.direction = new Vec2(LEFT, DOWN);
     this.lastPos = this.direction.clone();
   }
@@ -62,12 +62,8 @@ export default class Jump extends Behavior {
     return this.direction.y === UP;
   }
 
-  isJumping() {
-    return this.jumping;
-  }
-
   update(entity, deltaTime) {
-    if(!this.isJumping()) return;
+    if(!this.isJumping) return;
 
     this.angle += this.speed * deltaTime;
 
@@ -81,7 +77,7 @@ export default class Jump extends Behavior {
     if(finished) {
       this._normalizeEntityPos(entity);
       this.triggerOnEnd();
-      this.jumping = false;
+      this.isJumping = false;
     }
   }
 
@@ -105,9 +101,9 @@ export default class Jump extends Behavior {
   }
 
   _start(directionX, directionY) {
-    if(this.isJumping() || !this.isEnabled) return;
+    if(this.isJumping || !this.isEnabled) return;
 
-    this.jumping = true;
+    this.isJumping = true;
     this.direction.set(directionX, directionY);
     this.lastPos.set(
       directionY > 0 ? 0 : 1,

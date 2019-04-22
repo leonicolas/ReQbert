@@ -26,12 +26,12 @@
       "transformation": "flipped"
     },
     {
-      "name": "qbert-wining",
+      "name": "qbert-wining-jump",
       "position": [128, 0],
       "size": [2, 2]
     },
     {
-      "name": "qbert-wining-jump",
+      "name": "qbert-wining",
       "position": [160, 0],
       "size": [2, 2]
     },

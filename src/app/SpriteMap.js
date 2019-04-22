@@ -11,18 +11,18 @@ export default class SpriteMap {
   constructor(spritesSpec, spriteImageMap) {
     this.spriteImageMap = spriteImageMap;
     this.images = new Map();
-    this.animations = new Map();
+    this.animationsData = new Map();
     spritesSpec.sprites.forEach(spriteSpec => this._createSpriteBuffer(spriteSpec));
-    const animations = spritesSpec.animations || [];
-    animations.forEach(animSpec => this._createAnimationBuffer(animSpec));
+    const animationsSpec = spritesSpec.animations || [];
+    animationsSpec.forEach(animSpec => this._createAnimationData(animSpec));
   }
 
   getImage(imageName) {
     return this.images.get(imageName);
   }
 
-  getAnimation(animationName) {
-    return this.animations.get(animationName);
+  getAnimationData(animationName) {
+    return this.animationsData.get(animationName);
   }
 
   newSprite(imageName, pos) {
@@ -31,7 +31,7 @@ export default class SpriteMap {
   }
 
   newAnimation(animationName, pos) {
-    const animation = this.getAnimation(animationName);
+    const animation = this.getAnimationData(animationName);
     return new Animation(animation, pos);
   }
 
@@ -43,11 +43,11 @@ export default class SpriteMap {
     );
   }
 
-  _createAnimationBuffer(animSpec) {
+  _createAnimationData(animSpec) {
     let framesImages = animSpec.frames.map(
       frameName => this.getImage(frameName)
     );
-    this.animations.set(animSpec.name, {
+    this.animationsData.set(animSpec.name, {
       framesNames: animSpec.frames,
       frames: framesImages,
       frameTime: animSpec.frameTime

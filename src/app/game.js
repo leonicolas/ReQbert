@@ -23,8 +23,16 @@ async function main(canvas) {
 
   // Compositor
   const compositor = new Compositor();
-  compositor.addLayer(bgMap.get('bg-game-1'));
-  compositor.addLayer(stage1.getLevel('level1'));
+
+  const background = bgMap.getNewAnimation('bg-game');
+  compositor.addLayer(background);
+
+  const level1 = stage1.getLevel('level1');
+  compositor.addLayer(level1);
+
+  level1.onLevelClearedListeners.add(() => {
+    background.playInLoop();
+  });
 
   // Start to listening the input
   input.startListeningTo(window);

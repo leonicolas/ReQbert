@@ -1,8 +1,7 @@
 
 export default class Entity {
 
-  constructor(spriteMap, pos) {
-    this.spriteMap = spriteMap;
+  constructor(pos) {
     this.pos = pos.clone();
     this.behaviors = [];
   }
