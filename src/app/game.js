@@ -34,6 +34,18 @@ async function main(canvas) {
     background.playInLoop();
   });
 
+  compositor.addLayer(charactersMap.newSprite("pill-green", new Vec2(8, 3)));
+  compositor.addLayer(charactersMap.newSprite("pill-green-jumping", new Vec2(10, 3)));
+
+  compositor.addLayer(charactersMap.newSprite("pill-beige", new Vec2(8, 5)));
+  compositor.addLayer(charactersMap.newSprite("pill-beige-jumping", new Vec2(10, 5)));
+
+  compositor.addLayer(charactersMap.newSprite("pill-red", new Vec2(21, 3)));
+  compositor.addLayer(charactersMap.newSprite("pill-red-jumping", new Vec2(23, 3)));
+
+  compositor.addLayer(charactersMap.newSprite("pill-blue", new Vec2(21, 5)));
+  compositor.addLayer(charactersMap.newSprite("pill-blue-jumping", new Vec2(23, 5)));
+
   // Start to listening the input
   input.startListeningTo(window);
 

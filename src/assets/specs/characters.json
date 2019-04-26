@@ -44,6 +44,46 @@
       "name": "qbert-dying-2",
       "position": [224, 0],
       "size": [2, 2]
+    },
+    {
+      "name": "pill-green",
+      "position": [0, 128],
+      "size": [2, 2]
+    },
+    {
+      "name": "pill-green-jumping",
+      "position": [32, 128],
+      "size": [2, 2]
+    },
+    {
+      "name": "pill-beige",
+      "position": [64, 128],
+      "size": [2, 2]
+    },
+    {
+      "name": "pill-beige-jumping",
+      "position": [96, 128],
+      "size": [2, 2]
+    },
+    {
+      "name": "pill-red",
+      "position": [128, 128],
+      "size": [2, 2]
+    },
+    {
+      "name": "pill-red-jumping",
+      "position": [160, 128],
+      "size": [2, 2]
+    },
+    {
+      "name": "pill-blue",
+      "position": [192, 128],
+      "size": [2, 2]
+    },
+    {
+      "name": "pill-blue-jumping",
+      "position": [224, 128],
+      "size": [2, 2]
     }
   ],
 
