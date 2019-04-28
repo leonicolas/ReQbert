@@ -10,6 +10,10 @@ export function toFixed(number, decimals) {
 
 export class Vec2 {
   constructor(x, y) {
+    if(Array.isArray(x)) {
+      y = x[1];
+      x = x[0];
+    }
     this.x = x;
     this.y = y;
   }

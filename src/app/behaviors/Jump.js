@@ -76,7 +76,7 @@ export default class Jump extends Behavior {
 
     if(finished) {
       this._normalizeEntityPos(entity);
-      this.triggerOnEnd();
+      this.triggerOnEnd(entity);
       this.isJumping = false;
     }
   }

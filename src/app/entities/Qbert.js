@@ -15,11 +15,9 @@ export default class Qbert extends Entity {
 
   constructor(spriteMap, pos) {
     super(pos);
-
     this._initializeSprites(spriteMap);
 
     // Initial state
-    this.xDirection = LEFT;
     this.state = STATE_IDLE;
 
     this.addBehavior(new Jump());
@@ -32,13 +30,8 @@ export default class Qbert extends Entity {
   }
 
   update(deltaTime) {
-    super.update(deltaTime);
     this._updateSprite();
-    this.sprite.pos.set(this.pos.x, this.pos.y);
-  }
-
-  render(context, deltaTime) {
-    this.sprite.render(context, deltaTime, this.xDirection);
+    super.update(deltaTime);
   }
 
   _bindDieListeners() {
@@ -67,14 +60,15 @@ export default class Qbert extends Entity {
   _updateSprite() {
     if(this.die.isDying || this.state === STATE_WON) return;
 
-    this.xDirection = this.jump.isToLeft() ? LEFT : RIGHT;
+    // Updates the direction
+    const xDirection = this.jump.isToLeft() ? LEFT : RIGHT;
+    this.transformIndex = xDirection;
+
+    // Updates the state
     this.state = this.jump.isJumping ? STATE_JUMPING : STATE_IDLE;
     const yDirection = this.jump.isToDown() ? 'front' : 'back';
-    this._setCurrentSprite(`${this.state}-${yDirection}`);
-  }
 
-  _setCurrentSprite(name) {
-    this.sprite = this.sprites[name];
+    this._setCurrentSprite(`${this.state}-${yDirection}`);
   }
 
   _initializeSprites(spriteMap) {

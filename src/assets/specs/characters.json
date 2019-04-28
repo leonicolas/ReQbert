@@ -92,6 +92,26 @@
       "name": "qbert-dying",
       "frameTime": 150,
       "frames": ["qbert-dying-1", "qbert-dying-2"]
+    },
+    {
+      "name": "pill-blue-dying",
+      "frameTime": 150,
+      "frames": ["pill-blue", "pill-blue-jumping"]
+    },
+    {
+      "name": "pill-red-dying",
+      "frameTime": 150,
+      "frames": ["pill-red", "pill-red-jumping"]
+    },
+    {
+      "name": "pill-beige-dying",
+      "frameTime": 150,
+      "frames": ["pill-beige", "pill-beige-jumping"]
+    },
+    {
+      "name": "pill-green-dying",
+      "frameTime": 150,
+      "frames": ["pill-green", "pill-green-jumping"]
     }
   ]
 }

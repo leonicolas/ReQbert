@@ -2,8 +2,9 @@
 export default class Entity {
 
   constructor(pos) {
-    this.pos = pos.clone();
     this.behaviors = [];
+    this.transformIndex = 0;
+    this.pos = pos.clone();
   }
 
   addBehavior(behavior) {
@@ -13,5 +14,16 @@ export default class Entity {
 
   update(deltaTime) {
     this.behaviors.forEach(behavior => behavior.update(this, deltaTime));
+    if(this.sprite)
+      this.sprite.pos.set(this.pos.x, this.pos.y);
+  }
+
+  render(context, deltaTime) {
+    if(this.sprite)
+      this.sprite.render(context, deltaTime, this.transformIndex);
+  }
+
+  _setCurrentSprite(name) {
+    this.sprite = this.sprites[name];
   }
 }
