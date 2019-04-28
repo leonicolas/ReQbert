@@ -11,6 +11,14 @@ const directions = [
   { line: -1, column: 1 },
 ];
 
+export function createDieIfOutOfBoundariesCallBack(blocksData) {
+  return (entity) => {
+    let block = blocksData.get(entity.pos.y, entity.pos.x);
+    if(!block && entity.die)
+      entity.die.start();
+  }
+}
+
 export function isLevelCleared(blocksData, refBlock) {
   let cleared = false;
   directions.forEach(direction => {

@@ -1,7 +1,7 @@
 import config from './config';
 import { Vec2, Matrix } from './libs/math';
 import { jumpWithKeys } from './libs/bind';
-import { isLevelCleared } from './libs/level';
+import { isLevelCleared, createDieIfOutOfBoundariesCallBack } from './libs/level';
 
 import Layer from './Layer';
 import Block from './Block';
@@ -150,13 +150,5 @@ export default class Level {
         this.cleared = true;
       };
     }
-  }
-}
-
-function createDieIfOutOfBoundariesCallBack(blocksData) {
-  return (entity) => {
-    let block = blocksData.get(entity.pos.y, entity.pos.x);
-    if(!block && entity.die)
-      entity.die.start();
   }
 }
