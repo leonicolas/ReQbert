@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const assetsPath = 'assets';
 const jsPath = path.join(assetsPath, 'js');
@@ -9,9 +9,10 @@ const imgPath = path.join(assetsPath, 'img');
 
 module.exports = {
   devtool: 'inline-source-map',
+  mode: 'development',
 
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, 'dist'),
     compress: false,
     port: 9000
   },
@@ -21,7 +22,7 @@ module.exports = {
   },
 
   context: path.resolve('src'),
-  entry: './main.js',
+  entry: './index.js',
   output: {
     path: path.resolve('dist'),
     filename: path.join(jsPath, 'main.js')
@@ -36,7 +37,7 @@ module.exports = {
         options: {
           presets: ['@babel/preset-env']
         }
-      }
+      },
     ]
   },
 
@@ -50,6 +51,10 @@ module.exports = {
       inject: true,
       template: 'index.html'
     }),
-    new CopyWebpackPlugin([{ from: assetsPath, to: assetsPath }])
+    new CopyPlugin({
+      patterns: [
+        { from: assetsPath, to: assetsPath }
+      ]
+    }),
   ]
 };
