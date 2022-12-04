@@ -19,7 +19,7 @@ export function createDieIfOutOfBoundariesCallBack(blocksData) {
   }
 }
 
-export function isLevelCleared(blocksData, refBlock) {
+export function isStageCleared(blocksData, refBlock) {
   let cleared = false;
   directions.forEach(direction => {
     if(cleared) return;

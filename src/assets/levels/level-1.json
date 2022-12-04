@@ -1,6 +1,6 @@
 {
-  "levels": {
-    "level1": {
+  "stages": {
+    "stage1": {
       "startPos": [15, 3],
       "refBlock": "bl1-r",
       "blocks": [
@@ -15,7 +15,7 @@
         [null   , null   , null   , null   , "bl1-t", null   , null   , null   , null   ]
       ]
     },
-    "level2": {
+    "stage2": {
       "refBlock": "bl1-r",
       "blocks": [
         [null   , null   , null   , null   , "bl1-f", null   , null   , null   , null   ],

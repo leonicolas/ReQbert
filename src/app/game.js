@@ -1,4 +1,4 @@
-import { loadBackgrounds, loadSprites, loadStage } from './libs/loaders';
+import { loadBackgrounds, loadSprites, loadLevel } from './libs/loaders';
 
 import Timer from './Timer';
 import Compositor from './Compositor';
@@ -16,8 +16,8 @@ async function main(canvas) {
   const charactersMap = await loadSprites('characters.json');
   const bgMap = await loadBackgrounds('backgrounds.json', tilesMap);
 
-  // Stage
-  const stage1 = await loadStage(1, tilesMap, charactersMap, input);
+  // Level
+  const level1 = await loadLevel(1, tilesMap, charactersMap, input);
 
   // Compositor
   const compositor = new Compositor();
@@ -25,14 +25,14 @@ async function main(canvas) {
   const background = bgMap.getNewAnimation('bg-game');
   compositor.addLayer(background);
 
-  const level1 = stage1.getLevel('level1');
-  compositor.addLayer(level1);
+  const stage1 = level1.getStage(1);
+  compositor.addLayer(stage1);
 
-  level1.onLevelClearedListeners.add(() => {
+  stage1.onLevelClearedListeners.add(() => {
     background.playInLoop();
   });
 
-  // Start to listening the input
+  // Start listening the input
   input.startListeningTo(window);
 
   // Time based main loop

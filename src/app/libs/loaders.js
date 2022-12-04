@@ -1,6 +1,6 @@
 import BackgroundMap from '../BackgroundMap';
 import SpriteMap from '../SpriteMap';
-import Stage from '../Stage';
+import Level from '../Level';
 
 export function loadImage(imageFile) {
   return new Promise(resolve => {
@@ -21,9 +21,9 @@ export function loadBackgrounds(bgSpecName, tilesMap) {
     .then(bgSpec => new BackgroundMap(bgSpec, tilesMap));
 }
 
-export function loadStage(stageNumber, tilesMap, charactersMap, input) {
-  return loadJson(`stages/stage-${stageNumber}.json`)
-    .then(stageSpec => new Stage(stageSpec, tilesMap, charactersMap, input));
+export function loadLevel(levelNumber, tilesMap, charactersMap, input) {
+  return loadJson(`levels/level-${levelNumber}.json`)
+    .then(levelSpec => new Level(levelSpec, tilesMap, charactersMap, input));
 }
 
 export function loadJson(fileName) {
