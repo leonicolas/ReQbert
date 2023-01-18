@@ -1,15 +1,21 @@
 import Behavior from '../Behavior';
 import config from '../config';
+import Entity from '../Entity';
+import { Vector2 } from '../libs/math';
 
 export default class Spawn extends Behavior {
 
+  speed: number = 5;
+  isSpawning: boolean;
+  position: Vector2;
+  finalPos: Vector2;
+
   constructor() {
-    super('spawn');
+    super();
     this.reset();
-    this.speed = 5;
   }
 
-  start(finalPos) {
+  start(finalPos: Vector2) {
     if(this.isActive()) return;
     this.reset();
     this.isSpawning = true;
@@ -23,10 +29,10 @@ export default class Spawn extends Behavior {
     return this.isSpawning;
   }
 
-  update(entity, deltaTime) {
-    this._checkIfFinished(entity);
+  update(entity: Entity, deltaTime: number) {
+    this.checkIfFinished(entity);
     if(this.isSpawning) {
-      this._move(entity, deltaTime);
+      this.move(entity, deltaTime);
     }
   }
 
@@ -34,16 +40,16 @@ export default class Spawn extends Behavior {
     this.isSpawning = false;
   }
 
-  _move(entity, deltaTime) {
+  private move(entity: Entity, deltaTime: number) {
     this.position.moveY(this.speed * deltaTime);
-    entity.pos.set(this.position.x, this.position.y);
+    entity.position.set(this.position.x, this.position.y);
   }
 
-  _checkIfFinished(entity) {
-    if(!this.isSpawning) return;
-    if(entity.pos.y >= this.finalPos.y &&
-       entity.pos.y < config.grid.lines) {
-      entity.pos.set(this.finalPos.x, this.finalPos.y);
+  private checkIfFinished(entity: Entity) {
+    if(!this.isSpawning)
+      return;
+    if(entity.position.y >= this.finalPos.y && entity.position.y < config.grid.lines) {
+      entity.position.set(this.finalPos.x, this.finalPos.y);
       this.isSpawning = false;
       this.triggerOnEnd();
     }

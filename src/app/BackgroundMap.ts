@@ -1,32 +1,34 @@
-import config from './config.js';
-
 import { castArray } from './libs/utils';
-import { Vec2 } from './libs/math';
+import { Size2, Vector2 } from './libs/math';
 
-import Animation from './Animation';
-import Background from './Background';
-import Range from './Range';
+import TilesMap from './TilesMap';
+import { BackgroundSpec, BackgroundsSpec } from './specs/Background';
+import { ConfigSpec } from './specs/Config';
+import { SpriteSpec } from './specs/Sprite';
+import Sprite from './Sprite';
+import { getGameConfig } from './Global';
 
 export default class BackgroundMap {
 
-  constructor(backgroundsSpec, tilesMap) {
-    this.size = new Vec2(config.screen.width, config.screen.height);
-    this.backgroundImages = new Map();
-    this.animationsData = new Map();
-    backgroundsSpec.backgrounds.forEach(bgSpec => this._createBackground(bgSpec, tilesMap));
-    backgroundsSpec.animations.forEach(animSpec => this._createAnimationData(animSpec));
+  size: Size2;
+  backgrounds = new Map<string, Sprite>();
+
+  constructor(backgroundsSpec: BackgroundsSpec, tilesMap: TilesMap) {
+    const config = getGameConfig();
+    this.size = new Size2(config.screen.width, config.screen.height);
+
+    const backgroundImages = backgroundsSpec.backgroundImages.map((backgroundImageSpec) =>
+      this.createBackground(backgroundImageSpec);
+    );
+    backgroundsSpec.backgrounds.forEach(
+      (backgroundSpec) => this.createBackground(backgroundSpec, backgroundImages));
   }
 
-  get(bgName) {
-    return new Background(this.backgroundImages.get(bgName));
+  get(bgName: string): Sprite {
+    return new Sprite(this.backgroundImages.get(bgName));
   }
 
-  getNewAnimation(animName) {
-    const animationData = this.animationsData.get(animName);
-    return new Animation(animationData);
-  }
-
-  _createAnimationData(animSpec) {
+  private createBackground(animSpec: SpriteSpec) {
     const frames = animSpec.frames.map(bgName => this.backgroundImages.get(bgName));
     this.animationsData.set(animSpec.name, {
       frames,
@@ -34,45 +36,49 @@ export default class BackgroundMap {
     });
   }
 
-  _createBackground(bgSpec, tilesMap) {
+  private createBackground(bgSpec: BackgroundSpec, tilesMap: TilesMap): Backgro {
     // Buffer initialize
     const buffer = document.createElement('canvas');
-    buffer.width = this.size.x;
-    buffer.height = this.size.y;
+    buffer.width = this.size.width;
+    buffer.height = this.size.height;
 
     // Fill buffer with defined color
     const context = buffer.getContext('2d');
-    this._fillBuffer(context, bgSpec.color);
+    this.fillBuffer(context, bgSpec.color);
 
     // Draw tilesMap into the buffer
-    bgSpec.fill.forEach(this._drawToBuffer(context, tilesMap));
+    bgSpec.fill.forEach(this.drawToBuffer(context, tilesMap));
 
     // Save backgrounds
     this.backgroundImages.set(bgSpec.name, buffer);
   }
 
-  _fillBuffer(context, color) {
+  private fillBuffer(context: CanvasRenderingContext2D, color: string) {
     if (color) {
       context.fillStyle = color;
-      context.fillRect(0, 0, this.size.x, this.size.y);
+      context.fillRect(0, 0, this.size.width, this.size.height);
     } else {
       context.fillStyle = 'rgba(0, 0, 0, 1)';
     }
   }
 
-  _drawToBuffer(context, tilesMap) {
-    function normalizeRange(fn) {
-      return range => {
+  private drawToBuffer(context: CanvasRenderingContext2D, tilesMap: TilesMap) {
+    function normalizeRange(fn: (range: Range) => void) {
+      return (range: Range) => {
         range = Array.isArray(range) ? range : [range, range];
         fn(new Range(range[0], range[1]));
       };
     }
 
-    function drawTile(rangeX, rangeY, { step, names, nameIndex, index }) {
+    function drawTile(
+      rangeX:number[],
+      rangeY: number[],
+      { step, names, nameIndex, index }: { step: Vector2, names: string[], nameIndex: number, index: number }
+    ) {
       rangeX.forEach(x => {
         rangeY.forEach(y => {
           let spriteName = names[nameIndex++ % names.length];
-          tilesMap.draw(spriteName, context, new Vec2(x, y), index || 0);
+          tilesMap.draw(spriteName, context, new Vector2(x, y), index || 0);
         }, step.y);
       }, step.x);
     }
@@ -86,7 +92,7 @@ export default class BackgroundMap {
 
       // Process ranges
       fillSpec.ranges.forEach(range => {
-        fillCxt.step = new Vec2(range.stepX || 1, range.stepY || 1);
+        fillCxt.step = new Vector2(range.stepX || 1, range.stepY || 1);
         // Process X range
         range.x.forEach(
           normalizeRange(rangeX => {

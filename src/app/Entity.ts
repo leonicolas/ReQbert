@@ -1,29 +1,51 @@
+import Behavior from "./Behavior";
+import { Vector2 } from "./libs/math";
+import Sprite from "./Sprite";
 
 export default class Entity {
 
-  constructor(pos) {
-    this.behaviors = [];
-    this.transformIndex = 0;
-    this.pos = pos.clone();
+  private position: Vector2;
+  private activeSprite: Sprite;
+  private sprites = new Map<string, Sprite>();
+
+  readonly behaviors: Map<typeof Behavior, Behavior> = new Map();
+
+  constructor(position: Vector2) {
+    this.position = position.clone();
   }
 
-  addBehavior(behavior) {
-    this.behaviors.push(behavior);
-    this[behavior.name] = behavior;
+  addBehavior(behavior: typeof Behavior) {
+    this.behaviors.set(behavior, new behavior());
   }
 
-  update(deltaTime) {
-    this.behaviors.forEach(behavior => behavior.update(this, deltaTime));
-    if(this.sprite)
-      this.sprite.pos.set(this.pos.x, this.pos.y);
+  addSprite(name: string, sprite: Sprite) {
+    this.sprites.set(name, sprite);
   }
 
-  render(context, deltaTime) {
-    if(this.sprite)
-      this.sprite.render(context, deltaTime, this.transformIndex);
+  playAnimationInLoop() {
+    this.activeSprite.playInLoop();
   }
 
-  _setCurrentSprite(name) {
-    this.sprite = this.sprites[name];
+  stopAnimation() {
+    this.activeSprite.stop();
+  }
+
+  behavior<T extends Behavior>(behavior: typeof Behavior): T {
+    return this.behaviors.get(behavior) as T;
+  }
+
+  update(deltaTime: number) {
+    Object.keys(this.behaviors).forEach(name => {
+      this.behaviors[name].update(this, deltaTime)
+    })
+    this.activeSprite?.position.set(this.position.x, this.position.y);
+  }
+
+  render(context: CanvasRenderingContext2D, deltaTime: number) {
+    this.activeSprite?.render(context, deltaTime, this.transformIndex);
+  }
+
+  setActiveSprite(name: string) {
+    this.activeSprite = this.sprites[name];
   }
 }

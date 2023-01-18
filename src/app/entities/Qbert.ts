@@ -3,83 +3,84 @@ import Jump from '../behaviors/Jump';
 import Spawn from '../behaviors/Spawn';
 import Die from '../behaviors/Die';
 import Win from '../behaviors/Win';
+import TilesMap from '../TilesMap';
+import { Vector2 } from '../libs/math';
 
-const LEFT = 0;
-const RIGHT = 1;
+export enum QbertDirection {
+  Left, Right
+}
 
-const STATE_IDLE = 'idle';
-const STATE_WON = 'won';
-const STATE_JUMPING = 'jumping';
+export enum QbertState {
+  Idle, Won, Jumping
+}
 
 export default class Qbert extends Entity {
 
-  constructor(spriteMap, pos) {
-    super(pos);
-    this._initializeSprites(spriteMap);
+  private state: QbertState = QbertState.Idle;
 
-    // Initial state
-    this.state = STATE_IDLE;
+  constructor(tilesMap: TilesMap, position: Vector2) {
+    super(position);
+    this.initializeSprites(tilesMap);
 
-    this.addBehavior(new Jump());
-    this.addBehavior(new Spawn());
-    this.addBehavior(new Win());
-    this.addBehavior(new Die());
+    this.addBehavior(Jump);
+    this.addBehavior(Spawn);
+    this.addBehavior(Win);
+    this.addBehavior(Die);
 
-    this._bindDieListeners();
-    this._bindWinListeners();
+    this.bindDieListeners();
+    this.bindWinListeners();
   }
 
-  update(deltaTime) {
-    this._updateSprite();
+  update(deltaTime: number) {
+    this.updateSprite();
     super.update(deltaTime);
   }
 
-  _bindDieListeners() {
-    this.die.onStartListeners.add(() => {
-      this.sprites.dying.playInLoop();
-      this._setCurrentSprite('dying');
+  private bindDieListeners() {
+    this.behavior<Die>(Die).onStartListeners.add(() => {
+      this.setActiveSprite('dying');
+      this.playAnimationInLoop();
     });
 
-    this.die.onEndListeners.add(() => {
-      this.sprites.dying.stop();
-      this.jump.reset();
-      this._setCurrentSprite('idle-front');
+    this.behavior<Die>(Die).onEndListeners.add(() => {
+      this.stopAnimation();
+      this.behavior<Jump>(Jump).reset();
+      this.setActiveSprite('idle-front');
     });
   }
 
-  _bindWinListeners() {
-    this.win.onStartListeners.add(() => {
-      this.state = STATE_WON;
-      this._setCurrentSprite('win-jump');
+  private bindWinListeners() {
+    this.behavior<Win>(Win).onStartListeners.add(() => {
+      this.state = QbertState.Won;
+      this.setActiveSprite('win-jump');
     });
-    this.win.onLowestPointListeners.add(() => this._setCurrentSprite('win-jump'));
-    this.win.onHighestPointListeners.add(() => this._setCurrentSprite('win'));
-    this.win.onEndListeners.add(() => this._setCurrentSprite('win'));
+    this.behavior<Win>(Win).onLowestPointListeners.add(() => this.setActiveSprite('win-jump'));
+    this.behavior<Win>(Win).onHighestPointListeners.add(() => this.setActiveSprite('win'));
+    this.behavior<Win>(Win).onEndListeners.add(() => this.setActiveSprite('win'));
   }
 
-  _updateSprite() {
-    if(this.die.isDying || this.state === STATE_WON) return;
+  private updateSprite() {
+    if(this.behavior<Die>(Die).isDying || this.state === QbertState.Won)
+      return;
 
     // Updates the direction
-    const xDirection = this.jump.isToLeft() ? LEFT : RIGHT;
+    const xDirection = this.behavior<Jump>(Jump).isToLeft() ? QbertDirection.Left : QbertDirection.Right;
     this.transformIndex = xDirection;
 
     // Updates the state
-    this.state = this.jump.isJumping ? STATE_JUMPING : STATE_IDLE;
-    const yDirection = this.jump.isToDown() ? 'front' : 'back';
+    this.state = this.behavior<Jump>(Jump).isJumping ? QbertState.Jumping : QbertState.Idle;
+    const yDirection = this.behavior<Jump>(Jump).isToDown() ? 'front' : 'back';
 
-    this._setCurrentSprite(`${this.state}-${yDirection}`);
+    this.setActiveSprite(`${this.state}-${yDirection}`);
   }
 
-  _initializeSprites(spriteMap) {
-    this.sprites = {
-      'idle-front': spriteMap.newSprite('qbert-front'),
-      'idle-back': spriteMap.newSprite('qbert-back'),
-      'jumping-front': spriteMap.newSprite('qbert-front-jumping'),
-      'jumping-back': spriteMap.newSprite('qbert-back-jumping'),
-      'dying': spriteMap.newAnimation('qbert-dying'),
-      'win': spriteMap.newSprite('qbert-wining'),
-      'win-jump': spriteMap.newSprite('qbert-wining-jump'),
-    };
+  private initializeSprites(tilesMap: TilesMap) {
+    this.addSprite('idle-front', tilesMap.createSprite('qbert-front'));
+    this.addSprite('idle-back', tilesMap.createSprite('qbert-back'));
+    this.addSprite('jumping-front', tilesMap.createSprite('qbert-front-jumping'));
+    this.addSprite('jumping-back', tilesMap.createSprite('qbert-back-jumping'));
+    this.addSprite('dying', tilesMap.createSprite('qbert-dying'));
+    this.addSprite('win', tilesMap.createSprite('qbert-wining'));
+    this.addSprite('win-jump', tilesMap.createSprite('qbert-wining-jump'));
   }
 }

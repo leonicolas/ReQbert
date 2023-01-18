@@ -1,10 +1,17 @@
+import Die from '../behaviors/Die';
 import config from '../config';
+import Entity from '../Entity';
 
 // The blocks distance
 const distance = Object.assign({}, config.block.distance);
 
+export interface BlockDirection {
+  line: number,
+  column: number,
+};
+
 // The directions steps
-const directions = [
+const directions: BlockDirection[] = [
   { line: 0, column: 2 },
   { line: 2, column: 0 },
   { line: 1, column: 1 },
@@ -12,10 +19,9 @@ const directions = [
 ];
 
 export function createDieIfOutOfBoundariesCallBack(blocksData) {
-  return (entity) => {
-    let block = blocksData.get(entity.pos.y, entity.pos.x);
-    if(!block && entity.die)
-      entity.die.start();
+  return (entity: Entity) => {
+    let block = blocksData.get(entity.position.y, entity.position.x);
+    entity.behavior<Die>(Die)?.start();
   }
 }
 

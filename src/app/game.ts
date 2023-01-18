@@ -3,8 +3,9 @@ import { loadBackgrounds, loadSprites, loadLevel } from './libs/loaders';
 import Timer from './Timer';
 import Compositor from './Compositor';
 import Keyboard from './Keyboard';
+import config from './config';
 
-async function main(canvas) {
+export default async function main(canvas: HTMLCanvasElement) {
   canvas.focus();
   const context = canvas.getContext('2d');
 
@@ -12,9 +13,9 @@ async function main(canvas) {
   const input = new Keyboard();
 
   // Maps
-  const tilesMap = await loadSprites('tiles.json');
-  const charactersMap = await loadSprites('characters.json');
-  const bgMap = await loadBackgrounds('backgrounds.json', tilesMap);
+  const tilesMap = await loadSprites('tileson');
+  const charactersMap = await loadSprites('characterson');
+  const backgroundMap = await loadBackgrounds('backgroundson', tilesMap, config);
 
   // Level
   const level1 = await loadLevel(1, tilesMap, charactersMap, input);
@@ -22,7 +23,7 @@ async function main(canvas) {
   // Compositor
   const compositor = new Compositor();
 
-  const background = bgMap.getNewAnimation('bg-game');
+  const background = backgroundMap.getBackground('bg-game');
   compositor.addLayer(background);
 
   const stage1 = level1.getStage(1);
@@ -44,4 +45,4 @@ async function main(canvas) {
   timer.start();
 }
 
-main(document.getElementById('game'));
+main(document.getElementById('game') as HTMLCanvasElement);

@@ -1,18 +1,23 @@
 import Behavior from '../Behavior';
-import config from '../config';
+import Entity from '../Entity';
+import Jump from './Jump';
 
 export default class Win extends Behavior {
 
-  constructor() {
-    super('win');
-    this.speed = 5;
-    this.distance = 1;
-    this.onLowestPointListeners = new Set();
-    this.onHighestPointListeners = new Set();
-  }
+  distance: number = 1;
+  times: number;
+  isRunning: boolean = false;
+  initialPosition: number;
+  targetPosition: number;
+  speed: number;
+  direction = -1;
+
+  onLowestPointListeners = new Set<() => void>();
+  onHighestPointListeners = new Set<() => void>();
 
   start(times = 1) {
-    if(times <= 0) return;
+    if(times <= 0)
+      return;
     this.times = times;
     this.isRunning = true;
     this.initialPosition = undefined;
@@ -28,18 +33,18 @@ export default class Win extends Behavior {
     this.onLowestPointListeners.forEach(listener => listener());
   }
 
-  update(entity, deltaTime) {
-    if(!this.isRunning) return;
+  update(entity: Entity, deltaTime: number) {
+    if(!this.isRunning)
+      return;
 
     // Gets the initial entity position
     if(!this.initialPosition) {
-      this.initialPosition = entity.pos.y;
+      this.initialPosition = entity.position.y;
       this.targetPosition = this.initialPosition - this.distance;
-      if(entity.jump)
-        entity.jump.disable();
+      entity.behavior<Jump>(Jump)?.disable();
     }
     // Calculates the movement position
-    let newPosition = entity.pos.y + this.speed * deltaTime * this.direction;
+    let newPosition = entity.position.y + this.speed * deltaTime * this.direction;
 
     if(newPosition < this.targetPosition) {
       newPosition = this.targetPosition;
@@ -57,6 +62,6 @@ export default class Win extends Behavior {
     }
 
     // Move the entity
-    entity.pos.setY(newPosition);
+    entity.position.y = newPosition;
   }
 }

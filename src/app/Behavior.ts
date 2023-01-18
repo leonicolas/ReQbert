@@ -1,21 +1,21 @@
+import Entity from "./Entity";
 
 export default class Behavior {
 
-  constructor(name) {
-    this.name = name;
-    this.onStartListeners = new Set();
-    this.onEndListeners = new Set();
+  onStartListeners = new Set<(data: unknown) => void>();
+  onEndListeners = new Set<(data: unknown) => void>();
+
+  static NAME: string = "";
+
+  triggerOnStart(data?: unknown) {
+    this.onStartListeners.forEach((handler) => handler(data));
   }
 
-  triggerOnStart(data) {
-    this.onStartListeners.forEach(handler => handler(data));
+  triggerOnEnd(data?: unknown) {
+    this.onEndListeners.forEach((handler) => handler(data));
   }
 
-  triggerOnEnd(data) {
-    this.onEndListeners.forEach(handler => handler(data));
-  }
-
-  update(entity, deltaTime) {
-    console.info('Update not implemented!');
+  update(entity: Entity, deltaTime: number) {
+    console.info("Update not implemented!");
   }
 }

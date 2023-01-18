@@ -1,13 +1,21 @@
+import Keyboard from "./Keyboard";
+import { LevelSpec } from "./specs/Level";
+import TilesMap from "./TilesMap";
 import Stage from "./Stage";
 
 export default class Level {
 
-  constructor(levelSpec, tilesMap, charactersMap, input) {
+  levelSpec: LevelSpec;
+  tilesMap: TilesMap;
+  charactersMap: TilesMap;
+  input: Keyboard;
+  currentStage: Stage;
+
+  constructor(levelSpec: LevelSpec, tilesMap: TilesMap, charactersMap: TilesMap, input: Keyboard) {
     this.levelSpec = levelSpec;
     this.tilesMap = tilesMap;
     this.charactersMap = charactersMap;
     this.input = input;
-    this.currentStage;
   }
 
   getStage(stageNumber) {

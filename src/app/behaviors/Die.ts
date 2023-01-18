@@ -1,12 +1,17 @@
 import Behavior from '../Behavior';
 import config from '../config';
+import Entity from '../Entity';
+import { Vector2 } from '../libs/math';
 
 export default class Die extends Behavior {
 
+  speed: number = 12;
+  isDying: boolean = false;
+  position: Vector2;
+
   constructor() {
-    super('die');
+    super();
     this.reset();
-    this.speed = 12;
 
     this.onStartListeners.add(entity => {
       if(entity.jump && entity.jump.isEnabled) {
@@ -25,10 +30,10 @@ export default class Die extends Behavior {
     return this.isDying;
   }
 
-  update(entity, deltaTime) {
-    this._dyingUpdate(entity);
+  update(entity: Entity, deltaTime: number) {
+    this.dyingUpdate(entity);
     if(this.isDying) {
-      this._move(entity, deltaTime);
+      this.move(entity, deltaTime);
     }
   }
 
@@ -37,19 +42,20 @@ export default class Die extends Behavior {
     this.position = undefined;
   }
 
-  _move(entity, deltaTime) {
+  private move(entity: Entity, deltaTime: number) {
     this.position.moveY(this.speed * deltaTime);
-    entity.pos.setY(this.position.y);
+    entity.position.y = this.position.y;
   }
 
-  _dyingUpdate(entity) {
-    if(!this.isDying) return;
+  private dyingUpdate(entity: Entity) {
+    if(!this.isDying)
+      return;
 
     if(!this.position) {
-      this.position = entity.pos;
+      this.position = entity.position;
       this.triggerOnStart(entity);
     }
-    if(entity.pos.y >= config.grid.lines + 2) {
+    if(entity.position.y >= config.grid.lines + 2) {
       this.reset();
       this.triggerOnEnd(entity);
     }

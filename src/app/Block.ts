@@ -1,21 +1,30 @@
 import config from './config';
 
 import { LEFT, RIGHT, UP, DOWN } from './behaviors/Jump';
-import { Vec2 } from './libs/math';
+import { Vector2 } from './libs/math';
+import TilesMap from './TilesMap';
+import Sprite from './Sprite';
 
 const blockSize = 3 * config.grid.size;
 
 export default class Block {
-  constructor(initialSpriteName, tilesMap, pos = new Vec2(0, 0)) {
+
+  private currentSpriteName: string;
+  private tilesMap: TilesMap;
+  private position: Vector2;
+  private onRotateEndHandlers = new Set<(block: Block) => void>();
+  private cleared: boolean = false;
+  private currentBlockAnim: Animation;
+  private blockAnimMap = new Map<string, Animation>();
+
+  constructor(initialSpriteName: string, tilesMap: TilesMap, position = new Vector2(0, 0)) {
     this.currentSpriteName = initialSpriteName;
     this.tilesMap = tilesMap;
-    this.pos = pos.clone();
-    this.onRotateEndHandlers = new Set();
-    this.cleared = false;
-    this._initializeAnimations();
+    this.position = position.clone();
+    this.initializeAnimations();
   }
 
-  addRotateEndHandler(handler) {
+  addRotateEndHandler(handler: (block: Block) => void) {
     this.onRotateEndHandlers.add(handler);
   }
 
@@ -25,21 +34,21 @@ export default class Block {
 
   markAsCleared() {
     this.cleared = true;
-    this.currentBlockAnim = this.tilesMap.newSprite("bl-cleared", this.pos);
+    this.currentBlockAnim = this.tilesMap.newSprite("bl-cleared", this.position);
   }
 
-  rotate(direction) {
+  rotate(direction: Vector2) {
     if(this.cleared) return;
     this.currentBlockAnim = this.blockAnimMap.get(`${this.currentSpriteName}-${direction.y}-${direction.x}`);
-    this.currentBlockAnim.pos.set(this.pos.x, this.pos.y);
+    this.currentBlockAnim.position.set(this.position.x, this.position.y);
     this.currentSpriteName = this.currentBlockAnim.getLastFrameName();
     this.currentBlockAnim.play();
   }
 
   render(context, deltaTime) {
     context.clearRect(
-      this.pos.x * config.grid.size,
-      this.pos.y * config.grid.size,
+      this.position.x * config.grid.size,
+      this.position.y * config.grid.size,
       blockSize,
       blockSize
     );
@@ -49,7 +58,7 @@ export default class Block {
     }
   }
 
-  _initializeAnimations() {
+  private initializeAnimations() {
     let blocksSpec = [
       [`bl1-f-${UP}-${RIGHT}`  , 'bl1-f-u'],
       [`bl1-f-${DOWN}-${LEFT}` , 'bl1-f-d'],
@@ -67,7 +76,6 @@ export default class Block {
       [`bl1-t-${DOWN}-${RIGHT}`, 'bl1-t-r'],
     ];
 
-    this.blockAnimMap = new Map();
     blocksSpec.forEach(blockSpec => {
       let blockAnim = this.tilesMap.newAnimation(blockSpec[1]);
       blockAnim.onAnimationEndListeners.add(() => {

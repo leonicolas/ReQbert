@@ -30,42 +30,16 @@ module.exports = {
 
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
-    extensionAlias: {
-     ".js": [".js", ".ts"],
-     ".cjs": [".cjs", ".cts"],
-     ".mjs": [".mjs", ".mts"]
-    }
   },
 
   module: {
     rules: [
       {
-        test: /\.([cm]?ts|tsx)$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env']
-            }
-          },
-          {
-            loader: 'ts-loader'
-          }
-        ]
+        loader: 'ts-loader',
       }
     ],
-
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env']
-        }
-      },
-    ]
   },
 
   plugins: [

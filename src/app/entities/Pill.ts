@@ -2,28 +2,32 @@ import Entity from "../Entity";
 import Jump from '../behaviors/Jump';
 import Spawn from '../behaviors/Spawn';
 import Die from '../behaviors/Die';
-import { Vec2 } from "../libs/math";
+import { Vector2 } from "../libs/math";
+import TilesMap from "../TilesMap";
 
 export default class Pill extends Entity {
 
-  constructor(spriteMap, color) {
-    super(new Vec2(13, -2));
+  private accumulatedTime = 0;
+  private jumpInterval = 1500;
+  private ready = false;
+  private color: string;
+
+  constructor(tilesMap: TilesMap, color: string) {
+    super(new Vector2(13, -2));
 
     this.color = color;
-    this.accumulatedTime = 0;
-    this.jumpInterval = 1500;
 
-    this._initializeSprites(spriteMap);
-    this._setCurrentSprite('idle');
+    this.initializeSprites(tilesMap);
+    this.setActiveSprite('idle');
 
-    this.addBehavior(new Jump());
-    this.addBehavior(new Spawn());
-    this.addBehavior(new Die());
+    this.addBehavior(Jump);
+    this.addBehavior(Spawn);
+    this.addBehavior(Die);
 
-    this._bindEvents();
+    this.bindEvents();
   }
 
-  update(deltaTime) {
+  update(deltaTime: number) {
     if(this.ready) {
       this.accumulatedTime += deltaTime * 1000;
     }
@@ -43,28 +47,28 @@ export default class Pill extends Entity {
       this.jump.leftDown();
   }
 
-  _initializeSprites(spriteMap) {
+  private initializeSprites(tilesMap: TilesMap) {
     this.sprites = {
-      'idle': spriteMap.newSprite(`pill-${this.color}`),
-      'idle-jumping': spriteMap.newSprite(`pill-${this.color}-jumping`),
-      'dying': spriteMap.newAnimation(`pill-${this.color}-dying`),
+      'idle': tilesMap.newSprite(`pill-${this.color}`),
+      'idle-jumping': tilesMap.newSprite(`pill-${this.color}-jumping`),
+      'dying': tilesMap.newAnimation(`pill-${this.color}-dying`),
     };
   }
 
-  _bindEvents() {
-    this.spawn.onEndListeners.add(() => this.ready = true);
+  private bindEvents() {
+    this.behaviors.spawn.onEndListeners.add(() => this.ready = true);
 
-    this.jump.onStartListeners.add(() => this._setCurrentSprite('idle-jumping'));
-    this.jump.onEndListeners.add(() => this._setCurrentSprite('idle'));
+    this.behaviors.jump.onStartListeners.add(() => this.setActiveSprite('idle-jumping'));
+    this.behaviors.jump.onEndListeners.add(() => this.setActiveSprite('idle'));
 
-    this.die.onStartListeners.add(() => {
+    this.behaviors.die.onStartListeners.add(() => {
       this.sprites.dying.playInLoop();
-      this._setCurrentSprite('dying');
+      this.setActiveSprite('dying');
     });
 
-    this.die.onEndListeners.add(() => {
+    this.behaviors.die.onEndListeners.add(() => {
       this.sprites.dying.stop();
-      this._setCurrentSprite('idle');
+      this.setActiveSprite('idle');
     });
   }
 }

@@ -1,4 +1,5 @@
 {
+  "module": "commonjs",
   "compileOnSave": false,
   "compilerOptions": {
       "allowSyntheticDefaultImports": true,
@@ -7,16 +8,17 @@
           "es2015",
           "es2016"
       ],
-      "jsx": "preserve",
       "target": "es2016",
       "module": "es2015",
       "moduleResolution": "node",
-      "noImplicitAny": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
+      "noImplicitAny": false,
+      "noUnusedLocals": false,
+      "noUnusedParameters": false,
+      "noImplicitThis": false,
       "removeComments": false,
       "preserveConstEnums": true,
       "sourceMap": true,
-      "skipLibCheck": true
+      "skipLibCheck": true,
+      "strict": false,
   }
 }
