@@ -1,24 +1,23 @@
 {
-  "module": "commonjs",
   "compileOnSave": false,
   "compilerOptions": {
       "allowSyntheticDefaultImports": true,
       "lib": [
-          "dom",
-          "es2015",
-          "es2016"
+          "DOM",
+          "ESNext"
       ],
-      "target": "es2016",
-      "module": "es2015",
+      "target": "ESNext",
+      "module": "NodeNext",
       "moduleResolution": "node",
       "noImplicitAny": false,
-      "noUnusedLocals": false,
-      "noUnusedParameters": false,
+      "noImplicitReturns": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
       "noImplicitThis": false,
       "removeComments": false,
       "preserveConstEnums": true,
       "sourceMap": true,
       "skipLibCheck": true,
-      "strict": false,
+      "strict": true,
   }
 }
