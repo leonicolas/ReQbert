@@ -1,15 +1,14 @@
 export function degToRad(deg: number): number {
-  return deg * Math.PI / 180;
+  return (deg * Math.PI) / 180;
 }
 
-export function toFixed(number: number, decimals: number) : number{
+export function toFixed(number: number, decimals: number): number {
   const factor = Math.pow(10, decimals);
   const signal = number >= 0 ? 1 : -1;
-  return Math.round((number * factor) + (signal * 0.0001)) / factor;
+  return Math.round(number * factor + signal * 0.0001) / factor;
 }
 
 export class Vector2 {
-
   x: number;
   y: number;
 
@@ -31,6 +30,11 @@ export class Vector2 {
     this.y = y;
   }
 
+  copyFrom(vector: Vector2) {
+    this.x = vector.x;
+    this.y = vector.y;
+  }
+
   move(x: number, y: number) {
     this.moveX(x);
     this.moveY(y);
@@ -46,7 +50,6 @@ export class Vector2 {
 }
 
 export class Size2 {
-
   width: number;
   height: number;
 
@@ -69,8 +72,7 @@ export class Size2 {
   }
 }
 
-export  class Range {
-
+export class Range {
   start: number;
   end: number;
 
@@ -87,19 +89,18 @@ export  class Range {
 }
 
 export class Matrix<V> {
-
-  matrix: V[][];
+  matrix = new Array<V[]>();
 
   set(x: number, y: number, value: V) {
     let col = this.matrix[x];
-    if(!col) {
+    if (!col) {
       col = [];
       this.matrix[x] = col;
     }
     col[y] = value;
   }
 
-  get(x: number, y: number): V {
+  get(x: number, y: number): V | undefined {
     const col = this.matrix[x];
     return col ? col[y] : undefined;
   }

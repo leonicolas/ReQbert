@@ -1,7 +1,7 @@
 {
   "imageFile": "tiles.png",
 
-  "sprites": [
+  "tiles": [
     {
       "name": "brick",
       "position": [0, 16],
@@ -72,7 +72,7 @@
     }
   ],
 
-  "animations": [
+  "sprites": [
     {
       "name": "bl1-f-d",
       "frameTime": 150,

@@ -1,38 +1,41 @@
-import Behavior from '../Behavior';
-import config from '../config';
-import Entity from '../Entity';
-import { Vector2 } from '../libs/math';
+import Behavior from "../Behavior";
+import config from "../config";
+import Entity from "../Entity";
+import { EntityEvent } from "../Global";
+import { Vector2 } from "../libs/math";
+
+export class SpawnEvent extends EntityEvent<void> {}
 
 export default class Spawn extends Behavior {
+  private speed: number = 5;
+  private finalPos?: Vector2;
 
-  speed: number = 5;
-  isSpawning: boolean;
-  position: Vector2;
-  finalPos: Vector2;
+  public isSpawning: boolean = false;
+  public position?: Vector2;
 
-  constructor() {
-    super();
+  constructor(entity: Entity) {
+    super(entity);
     this.reset();
   }
 
   start(finalPos: Vector2) {
-    if(this.isActive()) return;
+    if (this.isActive()) return;
     this.reset();
     this.isSpawning = true;
     this.position = finalPos.clone();
     this.position.y = -2;
     this.finalPos = finalPos;
-    this.triggerOnStart();
+    this.triggerOnStart<SpawnEvent>(new SpawnEvent(this.entity));
   }
 
   isActive() {
     return this.isSpawning;
   }
 
-  update(entity: Entity, deltaTime: number) {
-    this.checkIfFinished(entity);
-    if(this.isSpawning) {
-      this.move(entity, deltaTime);
+  update(deltaTime: number) {
+    this.checkIfFinished(this.entity);
+    if (this.isSpawning) {
+      this.move(this.entity, deltaTime);
     }
   }
 
@@ -41,17 +44,21 @@ export default class Spawn extends Behavior {
   }
 
   private move(entity: Entity, deltaTime: number) {
+    if (!this.position) {
+      return;
+    }
     this.position.moveY(this.speed * deltaTime);
     entity.position.set(this.position.x, this.position.y);
   }
 
   private checkIfFinished(entity: Entity) {
-    if(!this.isSpawning)
+    if (!this.isSpawning || !entity.position || !this.finalPos) 
       return;
-    if(entity.position.y >= this.finalPos.y && entity.position.y < config.grid.lines) {
+
+    if (entity.position.y >= this.finalPos.y && entity.position.y < config.grid.lines) {
       entity.position.set(this.finalPos.x, this.finalPos.y);
       this.isSpawning = false;
-      this.triggerOnEnd();
+      this.triggerOnEnd<SpawnEvent>(new SpawnEvent(this.entity));
     }
   }
 }

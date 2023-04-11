@@ -1,23 +1,13 @@
-import { SpriteSpec } from "./Sprite"
+import { SpriteSpec } from "./Sprite";
 
-export interface RangeSpec {
-  x: number[],
-  y: number[],
-}
+export type BackgroundMapSpec = {
+  name: string;
+  color: string;
+  tiles: string[];
+  map: string[];
+};
 
-export interface BackgroundFillSpec {
-  imageName: string,
-  index: number,
-  ranges: RangeSpec[],
-}
-
-export interface BackgroundSpec {
-  name: string,
-  color: string,
-  fill: BackgroundFillSpec[],
-}
-
-export interface BackgroundsSpec {
-  backgrounds: SpriteSpec[],
-  backgroundImages: BackgroundSpec[],
-}
+export type BackgroundsSpec = {
+  animations: SpriteSpec[];
+  backgrounds: BackgroundMapSpec[];
+};

@@ -1,6 +1,5 @@
 export default class Timer {
-
-  public update?: (deltaTime: number) => void
+  public update?: (deltaTime: number) => void;
 
   private updateProxy: (time: number) => void;
 
@@ -8,12 +7,11 @@ export default class Timer {
     let lastTime = 0;
     let accumulatedTime = 0;
 
-    this.updateProxy = time => {
+    this.updateProxy = (time) => {
       accumulatedTime += (time - lastTime) / 1000;
 
       while (accumulatedTime > deltaTime) {
-        if (this.update)
-          this.update(deltaTime);
+        if (this.update) this.update(deltaTime);
         accumulatedTime -= deltaTime;
       }
       lastTime = time;

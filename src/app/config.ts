@@ -11,11 +11,11 @@ export default {
   block: {
     startPosition: {
       x: 3,
-      y: 3
+      y: 3,
     },
     distance: {
       line: 2,
-      column: 3
-    }
-  }
+      column: 3,
+    },
+  },
 };

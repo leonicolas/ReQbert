@@ -1,44 +1,41 @@
-import config from './config';
-import { Vector2, Matrix } from './libs/math';
-import { jumpWithKeys } from './libs/bind';
-import { isStageCleared, createDieIfOutOfBoundariesCallBack } from './libs/stage';
+import config from "./config";
+import { Vector2, Matrix } from "./libs/math";
+import { jumpWithKeys } from "./libs/bind";
+import { isStageCleared, createDieIfOutOfBoundariesCallBack } from "./libs/stage";
 
-import Layer from './Layer';
-import Block from './Block';
-import Qbert from './entities/Qbert';
-import Pill from './entities/Pill';
-import Jump from './behaviors/Jump';
-import Spawn from './behaviors/Spawn';
-import Entity from './Entity';
-import Win from './behaviors/Win';
-import Die from './behaviors/Die';
-import { StageSpec } from './specs/Level';
+import Layer from "./Layer";
+import Block from "./Block";
+import Qbert from "./entities/Qbert";
+import Pill from "./entities/Pill";
+import Jump, { JumpEvent } from "./behaviors/Jump";
+import Spawn from "./behaviors/Spawn";
+import Win from "./behaviors/Win";
+import Die from "./behaviors/Die";
+import { StageSpec } from "./specs/Level";
+import { Renderable, Updatable } from "./Global";
+import TilesMap from "./TilesMap";
+import Keyboard from "./Keyboard";
 
 const entitiesLayerPos = new Vector2(0.5, -1.4);
 
 const refBlockPos = new Vector2(3, 3);
-const blocksPosition = new Vector2(
-  config.block.startPosition.x,
-  config.block.startPosition.y
-);
+const blocksPosition = new Vector2(config.block.startPosition.x, config.block.startPosition.y);
 
-export default class Stage {
-
-  tilesMap;
-  blocksData = new Matrix<Block>();
-  entities = new Set<Entity>();
-  entitiesLayer: Layer = new Layer(entitiesLayerPos, config);
-  cleared: boolean = false;
-  currentBlock: Block;
-  player: Qbert;
-  buffer: HTMLCanvasElement;
-  context: CanvasRenderingContext2D;
-  refBlockName: string;
+export default class Stage implements Updatable, Renderable {
+  private tilesMap: TilesMap;
+  private blocksData = new Matrix<Block>();
+  private entitiesLayer: Layer = new Layer(entitiesLayerPos, config);
+  private cleared: boolean = false;
+  private currentBlock?: Block;
+  private player: Qbert;
+  private buffer?: HTMLCanvasElement;
+  private context?: CanvasRenderingContext2D;
+  private refBlockName?: string;
 
   // Events listeners
   onLevelClearedListeners = new Set<() => void>();
 
-  constructor(stageSpec, tilesMap, charactersMap, input) {
+  constructor(stageSpec: StageSpec, tilesMap: TilesMap, charactersMap: TilesMap, input: Keyboard) {
     this.tilesMap = tilesMap;
 
     // Create entities
@@ -58,63 +55,64 @@ export default class Stage {
     jumpWithKeys(input, this.player);
   }
 
-  // It will be removed. Only for tests.
-  entitiesTest(charactersMap) {
-    const pill = new Pill(charactersMap,'green');
+  // It will be removed. Only for test.
+  entitiesTest(charactersMap: TilesMap) {
+    const pill = new Pill(charactersMap, "green");
     this.entitiesLayer.addEntity(pill);
     setTimeout(() => pill.behavior<Spawn>(Spawn).start(new Vector2(12, 5)), 3000);
     pill.behavior<Jump>(Jump).onEndListeners.add(createDieIfOutOfBoundariesCallBack(this.blocksData));
 
-    const pill2 = new Pill(charactersMap,'beige');
+    const pill2 = new Pill(charactersMap, "beige");
     this.entitiesLayer.addEntity(pill2);
     setTimeout(() => pill2.behavior<Spawn>(Spawn).start(new Vector2(18, 5)), 6000);
     pill2.behavior<Jump>(Jump).onEndListeners.add(createDieIfOutOfBoundariesCallBack(this.blocksData));
 
-    const pill3 = new Pill(charactersMap,'red');
+    const pill3 = new Pill(charactersMap, "red");
     this.entitiesLayer.addEntity(pill3);
     setTimeout(() => pill3.behavior<Spawn>(Spawn).start(new Vector2(12, 5)), 10000);
     pill3.behavior<Jump>(Jump).onEndListeners.add(createDieIfOutOfBoundariesCallBack(this.blocksData));
 
-    const pill4 = new Pill(charactersMap,'blue');
+    const pill4 = new Pill(charactersMap, "blue");
     this.entitiesLayer.addEntity(pill4);
     setTimeout(() => pill4.behavior<Spawn>(Spawn).start(new Vector2(18, 5)), 15000);
     pill4.behavior<Jump>(Jump).onEndListeners.add(createDieIfOutOfBoundariesCallBack(this.blocksData));
-
   }
 
   update(deltaTime: number) {
     this.entitiesLayer.update(deltaTime);
   }
 
-  render(context: CanvasRenderingContext2D, deltaTime: number) {
-    if(this.currentBlock) {
-      this.currentBlock.render(this.context, deltaTime);
-    }
-    context.drawImage(this.buffer, 0, 0);
-    this.entitiesLayer.render(context, deltaTime);
+  render(context: CanvasRenderingContext2D) {
+    if (this.context)
+      this.currentBlock?.render(this.context);
+  
+    if (this.buffer)
+      context.drawImage(this.buffer, 0, 0);
+    this.entitiesLayer.render(context);
   }
 
   triggerOnLevelCleared() {
-    this.onLevelClearedListeners.forEach(listener => listener());
+    this.onLevelClearedListeners.forEach((listener) => listener());
   }
 
   private initializeBuffer() {
-    this.buffer = document.createElement('canvas');
+    this.buffer = document.createElement("canvas");
     this.buffer.width = config.screen.width;
     this.buffer.height = config.screen.height;
-    this.context = this.buffer.getContext('2d');
+    this.context = this.buffer.getContext("2d") as CanvasRenderingContext2D;
   }
 
   private initializeStageBlocks(stageSpec: StageSpec) {
     // Draw reference block into the stage buffer.
     this.refBlockName = stageSpec.refBlock;
-    this.tilesMap.draw(stageSpec.refBlock, this.context, refBlockPos);
+    if (this.context)
+      this.tilesMap.drawTile(stageSpec.refBlock, this.context, refBlockPos);
 
     // Draw stage blocks into the stage buffer.
     let position = blocksPosition.clone();
-    stageSpec.blocks.forEach(line => {
+    stageSpec.blocks.forEach((line) => {
       line.forEach((blockName: string) => {
-        if(blockName) {
+        if (blockName) {
           this.createBlock(blockName, position);
         }
         position.moveX(config.block.distance.column);
@@ -126,12 +124,14 @@ export default class Stage {
 
   private initializePlayerListeners() {
     // Jump listeners
-    this.player.behavior<Jump>(Jump).onStartListeners.add((direction: Vector2) => {
+    this.player.behavior<Jump>(Jump).onStartListeners.add((event: JumpEvent) => {
+      if (!event.detail)
+        return;
       this.currentBlock = this.blocksData.get(this.player.position.y, this.player.position.x);
-      this.currentBlock.rotate(direction);
+      this.currentBlock?.rotate(event.detail);
     });
     this.player.behavior<Jump>(Jump).onEndListeners.add(() => {
-      if(this.cleared) {
+      if (this.cleared) {
         this.player.behavior<Win>(Win).start(3);
         this.triggerOnLevelCleared();
       }
@@ -152,15 +152,16 @@ export default class Stage {
     let block = new Block(blockName, this.tilesMap, position);
     block.addRotateEndHandler((block: Block) => this.checkBlock(block));
     this.blocksData.set(position.y, position.x, block);
-    this.tilesMap.draw(blockName, this.context, position);
+    if (this.context)
+      this.tilesMap.drawTile(blockName, this.context, position);
   }
 
-  private checkBlock(block) {
-    if(block.currentSpriteName === this.refBlockName) {
+  private checkBlock(block: Block) {
+    if (block.currentFrameName === this.refBlockName) {
       block.markAsCleared();
-      if(isStageCleared(this.blocksData, block)) {
+      if (isStageCleared(this.blocksData, block)) {
         this.cleared = true;
-      };
+      }
     }
   }
 }

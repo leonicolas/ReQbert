@@ -1,60 +1,59 @@
-import Behavior from '../Behavior';
-import Entity from '../Entity';
-import Jump from './Jump';
+import Behavior from "../Behavior";
+import { EntityEvent } from "../Global";
+import Jump from "./Jump";
+
+export class WinEvent extends EntityEvent<void> {}
 
 export default class Win extends Behavior {
+  public distance: number = 1;
+  public times: number = 0;
+  public isRunning: boolean = false;
+  public initialPosition?: number;
+  public targetPosition?: number;
+  public speed: number = 0;
+  public direction = -1;
 
-  distance: number = 1;
-  times: number;
-  isRunning: boolean = false;
-  initialPosition: number;
-  targetPosition: number;
-  speed: number;
-  direction = -1;
-
-  onLowestPointListeners = new Set<() => void>();
-  onHighestPointListeners = new Set<() => void>();
+  readonly onLowestPointListeners = new Set<() => void>();
+  readonly onHighestPointListeners = new Set<() => void>();
 
   start(times = 1) {
-    if(times <= 0)
-      return;
+    if (times <= 0) return;
     this.times = times;
     this.isRunning = true;
     this.initialPosition = undefined;
     this.direction = -1;
-    this.triggerOnStart();
+    this.triggerOnStart(new WinEvent(this.entity));
   }
 
   triggerOnHighestPoint() {
-    this.onHighestPointListeners.forEach(listener => listener());
+    this.onHighestPointListeners.forEach((listener) => listener());
   }
 
   triggerOnLowestPoint() {
-    this.onLowestPointListeners.forEach(listener => listener());
+    this.onLowestPointListeners.forEach((listener) => listener());
   }
 
-  update(entity: Entity, deltaTime: number) {
-    if(!this.isRunning)
-      return;
+  update(deltaTime: number) {
+    if (!this.isRunning) return;
 
     // Gets the initial entity position
-    if(!this.initialPosition) {
-      this.initialPosition = entity.position.y;
+    if (!this.initialPosition) {
+      this.initialPosition = this.entity.position.y;
       this.targetPosition = this.initialPosition - this.distance;
-      entity.behavior<Jump>(Jump)?.disable();
+      this.entity.behavior<Jump>(Jump)?.disable();
     }
     // Calculates the movement position
-    let newPosition = entity.position.y + this.speed * deltaTime * this.direction;
+    let newPosition = this.entity.position.y + this.speed * deltaTime * this.direction;
 
-    if(newPosition < this.targetPosition) {
+    if (this.targetPosition && newPosition < this.targetPosition) {
       newPosition = this.targetPosition;
       this.direction *= -1;
       this.triggerOnHighestPoint();
-    } else if(newPosition > this.initialPosition) {
+    } else if (newPosition > this.initialPosition) {
       newPosition = this.initialPosition;
-      if(--this.times === 0) {
+      if (--this.times === 0) {
         this.isRunning = false;
-        this.triggerOnEnd();
+        this.triggerOnEnd(new WinEvent(this.entity));
       } else {
         this.triggerOnLowestPoint();
       }
@@ -62,6 +61,6 @@ export default class Win extends Behavior {
     }
 
     // Move the entity
-    entity.position.y = newPosition;
+    this.entity.position.y = newPosition;
   }
 }

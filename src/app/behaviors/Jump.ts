@@ -1,26 +1,28 @@
-import Behavior from '../Behavior';
-import Entity from '../Entity';
-import { degToRad, Vector2 } from '../libs/math'
+import Behavior from "../Behavior";
+import Entity from "../Entity";
+import { EntityEvent } from "../Global";
+import { degToRad, Vector2 } from "../libs/math";
 
 export const LEFT = -1;
 export const RIGHT = 1;
 export const UP = -1;
 export const DOWN = 1;
 
+export class JumpEvent extends EntityEvent<Vector2> {}
+
 export default class Jump extends Behavior {
+  public isEnabled: boolean = true;
+  public speed: number = 250;
+  public angle: number = 0;
+  public refAngle: number = 0;
+  public ratio: Vector2 = new Vector2(3, 2);
+  public isJumping: boolean = false;
+  public direction: Vector2 = new Vector2(0, 0);
+  public lastPosition: Vector2 = new Vector2(0, 0);
+  public maxAngle: number = 0;
 
-  isEnabled: boolean = true;
-  speed: number = 250;
-  angle: number;
-  refAngle: number;
-  ratio: Vector2 = new Vector2(3, 2);
-  isJumping: boolean;
-  direction: Vector2;
-  lastPosition: Vector2;
-  maxAngle: number;
-
-  constructor() {
-    super();
+  constructor(entity: Entity) {
+    super(entity);
     this.reset();
   }
 
@@ -33,7 +35,6 @@ export default class Jump extends Behavior {
   enable() {
     this.isEnabled = true;
   }
-;
   disable() {
     this.isEnabled = false;
   }
@@ -70,21 +71,21 @@ export default class Jump extends Behavior {
     return this.direction.y === UP;
   }
 
-  update(entity: Entity, deltaTime: number) {
-    if(!this.isJumping) return;
+  update(deltaTime: number) {
+    if (!this.isJumping) return;
 
     this.angle += this.speed * deltaTime;
 
     let finished = this.angle > this.maxAngle;
-    if(finished) {
+    if (finished) {
       this.angle = this.maxAngle;
     }
 
-    this.moveEntity(entity);
+    this.moveEntity(this.entity);
 
-    if(finished) {
-      this.normalizeEntityPosition(entity);
-      this.triggerOnEnd(entity);
+    if (finished && this.direction) {
+      this.normalizeEntityPosition(this.entity);
+      this.triggerOnEnd(new JumpEvent(this.entity, this.direction.clone()));
       this.isJumping = false;
     }
   }
@@ -102,25 +103,19 @@ export default class Jump extends Behavior {
   }
 
   private normalizeEntityPosition(entity: Entity) {
-    entity.position.set(
-      Math.round(entity.position.x),
-      Math.round(entity.position.y)
-    );
+    entity.position.set(Math.round(entity.position.x), Math.round(entity.position.y));
   }
 
   private start(directionX: number, directionY: number) {
-    if(this.isJumping || !this.isEnabled) return;
+    if (this.isJumping || !this.isEnabled) return;
 
     this.isJumping = true;
     this.direction.set(directionX, directionY);
-    this.lastPosition.set(
-      directionY > 0 ? 0 : 1,
-      directionY > 0 ? 1 : 0
-    );
+    this.lastPosition.set(directionY > 0 ? 0 : 1, directionY > 0 ? 1 : 0);
     this.angle = 0;
     this.maxAngle = 90;
     this.refAngle = directionY > 0 ? 0 : 90;
 
-    this.triggerOnStart(this.direction.clone());
+    this.triggerOnStart(new JumpEvent(this.entity, this.direction.clone()));
   }
 }

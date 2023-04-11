@@ -1,21 +1,26 @@
 import Entity from "./Entity";
+import { EntityEvent } from "./Global";
 
 export default class Behavior {
-
-  onStartListeners = new Set<(data: unknown) => void>();
-  onEndListeners = new Set<(data: unknown) => void>();
+  readonly onStartListeners = new Set<(gameEvent: EntityEvent<any>) => void>();
+  readonly onEndListeners = new Set<(gameEvent: EntityEvent<any>) => void>();
+  readonly entity: Entity;
 
   static NAME: string = "";
 
-  triggerOnStart(data?: unknown) {
-    this.onStartListeners.forEach((handler) => handler(data));
+  constructor(entity: Entity) {
+    this.entity = entity;
   }
 
-  triggerOnEnd(data?: unknown) {
-    this.onEndListeners.forEach((handler) => handler(data));
+  triggerOnStart<T extends EntityEvent<any>>(gameEvent: T) {
+    this.onStartListeners.forEach((handler) => handler(gameEvent));
   }
 
-  update(entity: Entity, deltaTime: number) {
+  triggerOnEnd<T extends EntityEvent<any>>(gameEvent: T) {
+    this.onEndListeners.forEach((handler) => handler(gameEvent));
+  }
+
+  update(_: number) {
     console.info("Update not implemented!");
   }
 }

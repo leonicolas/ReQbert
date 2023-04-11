@@ -1,27 +1,32 @@
-import Behavior from '../Behavior';
-import config from '../config';
-import Entity from '../Entity';
-import { Vector2 } from '../libs/math';
+import Behavior from "../Behavior";
+import config from "../config";
+import Entity from "../Entity";
+import { EntityEvent } from "../Global";
+import { Vector2 } from "../libs/math";
+import Jump from "./Jump";
+
+export class DieEvent extends EntityEvent<void> {}
 
 export default class Die extends Behavior {
+  private speed: number = 12;
+  public isDying: boolean = false;
+  public position: Vector2 = new Vector2(0, 0);
 
-  speed: number = 12;
-  isDying: boolean = false;
-  position: Vector2;
-
-  constructor() {
-    super();
+  constructor(entity: Entity) {
+    super(entity);
     this.reset();
 
-    this.onStartListeners.add(entity => {
-      if(entity.jump && entity.jump.isEnabled) {
-        entity.jump.disable();
+    this.onStartListeners.add(() => {
+      const jump = this.entity.behaviors.get(Jump) as Jump;
+      if (jump && jump.isEnabled) {
+        jump.disable();
       }
     });
   }
 
   start() {
-    if(this.isActive()) return;
+    if (this.isActive()) return;
+    this.position = this.entity.position.clone();
     this.reset();
     this.isDying = true;
   }
@@ -30,34 +35,31 @@ export default class Die extends Behavior {
     return this.isDying;
   }
 
-  update(entity: Entity, deltaTime: number) {
-    this.dyingUpdate(entity);
-    if(this.isDying) {
-      this.move(entity, deltaTime);
+  update(deltaTime: number) {
+    this.dyingUpdate();
+    if (this.isDying) {
+      this.move(deltaTime);
     }
   }
 
   reset() {
     this.isDying = false;
-    this.position = undefined;
   }
 
-  private move(entity: Entity, deltaTime: number) {
+  private move(deltaTime: number) {
     this.position.moveY(this.speed * deltaTime);
-    entity.position.y = this.position.y;
+    this.entity.position.y = this.position.y;
   }
 
-  private dyingUpdate(entity: Entity) {
-    if(!this.isDying)
-      return;
+  private dyingUpdate() {
+    if (!this.isDying) return;
 
-    if(!this.position) {
-      this.position = entity.position;
-      this.triggerOnStart(entity);
-    }
-    if(entity.position.y >= config.grid.lines + 2) {
+    this.position.copyFrom(this.entity.position);
+    this.triggerOnStart(new DieEvent(this.entity));
+
+    if (this.entity.position.y >= config.grid.lines + 2) {
       this.reset();
-      this.triggerOnEnd(entity);
+      this.triggerOnEnd(new DieEvent(this.entity));
     }
   }
 }

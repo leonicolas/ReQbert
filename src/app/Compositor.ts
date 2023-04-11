@@ -1,19 +1,19 @@
+import { Renderable, Updatable } from "./Global";
+
 export default class Compositor {
-  constructor() {
-    this.updatableLayers = [];
-    this.layers = [];
+  private updatableLayers = new Set<Updatable>();
+  private renderableLayers = new Set<Renderable>();
+
+  addLayer(layer: Updatable | Renderable): void {
+    if ("update" in layer) this.updatableLayers.add(layer);
+    if ("render" in layer) this.renderableLayers.add(layer);
   }
 
-  addLayer(layer) {
-    if(layer.update) this.updatableLayers.push(layer);
-    this.layers.push(layer);
+  update(time: number): void {
+    this.updatableLayers.forEach((layer) => layer.update(time));
   }
 
-  update(time) {
-    this.updatableLayers.forEach(layer => layer.update(time));
-  }
-
-  render(context, time) {
-    this.layers.forEach(layer => layer.render(context, time));
+  render(context: CanvasRenderingContext2D): void {
+    this.renderableLayers.forEach((layer) => layer.render(context));
   }
 }

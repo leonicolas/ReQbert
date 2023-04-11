@@ -1,29 +1,26 @@
 {
   "imageFile": "characters.png",
-  "sprites": [
+
+  "tiles": [
     {
       "name": "qbert-front",
       "position": [0, 0],
-      "size": [2, 2],
-      "transformation": "flipped"
+      "size": [2, 2]
     },
     {
       "name": "qbert-front-jumping",
       "position": [32, 0],
-      "size": [2, 2],
-      "transformation": "flipped"
+      "size": [2, 2]
     },
     {
       "name": "qbert-back",
       "position": [64, 0],
-      "size": [2, 2],
-      "transformation": "flipped"
+      "size": [2, 2]
     },
     {
       "name": "qbert-back-jumping",
       "position": [96, 0],
-      "size": [2, 2],
-      "transformation": "flipped"
+      "size": [2, 2]
     },
     {
       "name": "qbert-wining-jump",
@@ -87,7 +84,28 @@
     }
   ],
 
-  "animations": [
+  "sprites": [
+    {
+      "name": "qbert-front",
+      "frames": ["qbert-front"]
+    },
+    {
+      "name": "qbert-back",
+      "frames": ["qbert-back"]
+    },
+    {
+      "name": "qbert-front-jumping",
+      "frames": ["qbert-front-jumping"]
+    },
+    {
+      "name": "qbert-back-jumping",
+      "frames": ["qbert-back-jumping"]
+    },
+    {
+      "name": "qbert-wining",
+      "frameTime": 150,
+      "frames": ["qbert-front", "qbert-wining-jump"]
+    },
     {
       "name": "qbert-dying",
       "frameTime": 150,
@@ -99,9 +117,29 @@
       "frames": ["pill-blue", "pill-blue-jumping"]
     },
     {
+      "name": "pill-blue-jumping",
+      "frameTime": 150,
+      "frames": ["pill-blue-jumping"]
+    },
+    {
+      "name": "pill-blue",
+      "frameTime": 150,
+      "frames": ["pill-blue"]
+    },
+    {
       "name": "pill-red-dying",
       "frameTime": 150,
       "frames": ["pill-red", "pill-red-jumping"]
+    },
+    {
+      "name": "pill-red-jumping",
+      "frameTime": 150,
+      "frames": ["pill-red-jumping"]
+    },
+    {
+      "name": "pill-red",
+      "frameTime": 150,
+      "frames": ["pill-red"]
     },
     {
       "name": "pill-beige-dying",
@@ -109,9 +147,29 @@
       "frames": ["pill-beige", "pill-beige-jumping"]
     },
     {
+      "name": "pill-beige-jumping",
+      "frameTime": 150,
+      "frames": ["pill-beige-jumping"]
+    },
+    {
+      "name": "pill-beige",
+      "frameTime": 150,
+      "frames": ["pill-beige"]
+    },
+    {
       "name": "pill-green-dying",
       "frameTime": 150,
       "frames": ["pill-green", "pill-green-jumping"]
+    },
+    {
+      "name": "pill-green-jumping",
+      "frameTime": 150,
+      "frames": ["pill-green-jumping"]
+    },
+    {
+      "name": "pill-green",
+      "frameTime": 150,
+      "frames": ["pill-green"]
     }
   ]
 }
