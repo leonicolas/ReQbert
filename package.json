@@ -11,9 +11,11 @@
   "author": "Leonardo Nicolas",
   "license": "ISC",
   "devDependencies": {
+    "@total-typescript/ts-reset": "^0.4.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "html-webpack-plugin": "^5.5.0",
+    "prettier": "^2.8.3",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.4",
     "webpack": "^5.75.0",
